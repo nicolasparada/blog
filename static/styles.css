@@ -1,8 +1,8 @@
 :root {
-    background-color: black;
+    background-color: #111;
     box-sizing: border-box;
-    color: white;
-    font-size: 21px;
+    color: #ddd;
+    font-size: 19px;
     font-family: 'PT Sans', sans-serif;
     line-height: 1.5;
     -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -19,7 +19,7 @@ body {
 }
 
 a {
-    color: #4ec9b0;
+    color: #09A;
 }
 
 img {
@@ -37,15 +37,19 @@ h1, h2, h3, h4 {
 
 pre {
     display: block;
-    background-color: #0e0e0f;
+    background-color: #151515;
     padding: 1rem;
-    font-size: .875rem;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 code {
-    background-color: #0e0e0f;
+    background-color: #151515;
+    color: #BF616A;
     font-family: 'Fira Mono', monospace;
     padding: 0 .25rem;
+    font-size: .8125rem;
+    overflow-wrap: break-word;
 }
 
 pre code {
@@ -55,8 +59,8 @@ pre code {
 }
 
 .site-nav {
-    border-bottom: .0625rem solid rgba(255, 255, 255, 0.03);
-    padding: 0 1rem;
+    border-bottom: .0625rem solid rgba(255, 255, 255, .05);
+    padding: 0 2rem;
     height: 3rem;
     display: flex;
     align-items: center;
@@ -74,7 +78,7 @@ pre code {
 
 .site-phrase {
     margin-left: .25rem;
-    color: #a6a6a6;
+    color: #9A9A9A;
 }
 
 .index {
@@ -84,7 +88,7 @@ pre code {
 }
 
 .container {
-    width: calc(100% - 2rem);
+    width: calc(100% - 4rem);
     max-width: 65ch;
     margin: 0 auto;
 }
@@ -105,6 +109,16 @@ pre code {
 }
 
 .post-date {
-    color: #a6a6a6;
+    color: #9A9A9A;
     font-size: 85%;
+}
+
+@media screen and (max-width: 25.875rem) {
+    .site-nav {
+        padding: 0 1rem;
+    }
+
+    .container {
+        width: calc(100% - 2rem);
+    }
 }
