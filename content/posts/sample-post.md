@@ -23,4 +23,8 @@ A list of items:
 - Item 3
 - Item 4
 
+An image:
+
+![unsplash.com sample image](https://images.unsplash.com/photo-1454165205744-3b78555e5572 "Code")
+
 Some links: [link1](http://example.org/) and [link2](http://example.org/).
