@@ -6,6 +6,8 @@
     font-family: 'PT Sans', sans-serif;
     line-height: 1.5;
     -ms-overflow-style: -ms-autohiding-scrollbar;
+    -ms-scrollbar-base-color: black;
+    scrollbar-base-color: black;
 }
 
 *,
@@ -36,13 +38,17 @@ h1, h2, h3, h4 {
     font-weight: 700;
 }
 
+hr {
+    border-color: rgba(255, 255, 255, .05);
+    margin: 3rem 0;
+}
+
 pre {
     display: block;
     background-color: #151515;
     color: white;
     padding: 1rem;
     overflow-x: auto;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 code {
@@ -81,6 +87,22 @@ pre code {
 .site-phrase {
     margin-left: .25rem;
     color: #9A9A9A;
+}
+
+.social {
+    margin-top: 1rem;
+    display: flex;
+    margin-left: 100%;
+}
+
+.social a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.social a + a {
+    margin-left: 1rem;
 }
 
 .index {
