@@ -1,7 +1,7 @@
 ---
 title: "Passwordless Auth: Server"
 date: 2018-04-18T10:36:23-03:00
-draft: true
+draft: false
 ---
 
 Passwordless authentication allows logging in without a password, just an email. It's a more secure way of doing than the classic email/password login.
