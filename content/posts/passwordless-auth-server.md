@@ -33,7 +33,7 @@ Now, create a new directory for the project inside `GOPATH` and start a new Cock
 cockroach start --insecure --host 127.0.0.1
 ```
 
-It will print some things, but check the SQL address line, it should said something like `postgresql://root@127.0.0.1:26257?sslmode=disable`. We'll use this to connect to the database latter.
+It will print some things, but check the SQL address line, it should said something like `postgresql://root@127.0.0.1:26257?sslmode=disable`. We'll use this to connect to the database later.
 
 Create a `schema.sql` file with the following content.
 
@@ -73,7 +73,7 @@ I want you to set two environment variables: `SMTP_USERNAME` and `SMTP_PASSWORD`
 
 ## Go Dependencies
 
-For Go, we'll need to following packages:
+For Go, we'll need the following packages:
 
 - [github.com/lib/pq](https://github.com/lib/pq): Postgres driver which CockroachDB uses.
 - [github.com/matryer/way](https://github.com/matryer/way): Router.
@@ -131,12 +131,12 @@ func env(key, fallbackValue string) string {
 - `appURL` will allow us to build the "magic link".
 - `port` in which the HTTP server will start.
 - `databaseURL` is the CockroachDB address, I added `/passwordless_demo` to the previous address to indicate the database name.
-- `jwtKey` this is a slice of bytes used to sign jwts.
+- `jwtKey` used to sign JWTs.
 - `smtpAddr` is a join of `SMTP_HOST` + `SMTP_PORT`; we'll use it to to send mails.
 - `smtpUsername` and `smtpPassword` are the two required vars.
 - `smtpAuth` is also used to send mails.
 
-The `env` function allow us to get an environment variable with a fallback value in case it doesn't exists.
+The `env` function allow us to get an environment variable with a fallback value in case it doesn't exist.
 
 ### Main Function
 
@@ -173,10 +173,7 @@ import (
 )
 ```
 
-Then we create the router and define some endpoints. For the passwordless flow we use two endpoints: `start` mails the magic link and `verify_redirect` respond with the JWT.
-
-`createUser`, `passwordlessStart`, `passwordlessVerifyRedirect` and `getAuthUser` are all handlers of type `http.HandlerFunc`, we'll code those now.
-`jsonRequired`, `authRequired` are middlewares; just function composition.
+Then we create the router and define some endpoints. For the passwordless flow we use two endpoints: `/api/passwordless/start` mails the magic link and `/api/passwordless/verify_redirect` respond with the JWT.
 
 Finally, we start the server.
 
@@ -220,7 +217,7 @@ go build
 ```
 
 I'm on a directory called "passwordless-demo", but if yours is different, `go build` will create an executable with that name.
-If you didn't close the previous `cockroach start` and you setted `SMTP_USERNAME` and `SMTP_PASSWORD` vars correctly, you should see `starting server at http://localhost/ 🚀` without errors.
+If you didn't close the previous cockroach node and you setted `SMTP_USERNAME` and `SMTP_PASSWORD` vars correctly, you should see `starting server at http://localhost/ 🚀` without errors.
 
 ### JSON Required Middleware
 
@@ -244,7 +241,7 @@ As easy as that. First it gets the request content type from the headers, then c
 
 ### Respond JSON Function
 
-Responding with JSON is also a common thing so I extracted it to a function `respondJSON`.
+Responding with JSON is also a common thing so I extracted it to a function.
 
 ```go
 func respondJSON(w http.ResponseWriter, payload interface{}, code int) {
@@ -294,12 +291,12 @@ type User struct {
 }
 ```
 
-The **User** type is just like the `users` table.
+The `User` type is just like the `users` table.
 
 ```go
 var (
-    rxEmail = regexp.MustCompile("")
-    rxUsername = regexp.MustCompile("")
+    rxEmail = regexp.MustCompile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+    rxUsername = regexp.MustCompile("^[a-zA-Z][\\w|-]{1,17}$")
 )
 ```
 
@@ -361,7 +358,7 @@ if errPq, ok := err.(*pq.Error); ok && errPq.Code.Name() == "unique_violation" {
 
 This SQL query inserts a new user with the given email and username, and returns the auto generated id. Each `$` will be replaced by the next arguments passed to `QueryRowContext`.
 
-Because the `users` table had unique constraints on the email and username fields I check for the "unique_violation" error to return with `403 Forbidden` else I return with an internal error.
+Because the `users` table had unique constraints on the `email` and `username` fields I check for the "unique_violation" error to return with `403 Forbidden` or I return with an internal error.
 
 ```go
 respondJSON(w, user, http.StatusCreated)
@@ -378,13 +375,13 @@ type PasswordlessStartRequest struct {
 }
 ```
 
-This struct holds the request body. The email of the user who wants to log in. The redirect URI comes from the client (the app that will use our API) ex: `https://frontend.app/callback`.
+This struct holds the `passwordlessStart` request body. The email of the user who wants to log in. The redirect URI comes from the client (the app that will use our API) ex: `https://frontend.app/callback`.
 
 ```go
 var magicLinkTmpl = template.Must(template.ParseFiles("templates/magic-link.html"))
 ```
 
-We'll use the golang template engine to build the mailing so I will need you to create a `magic-link.html` file inside a `templates` directory with a content like so:
+We'll use the golang template engine to build the mailing so I'll need you to create a `magic-link.html` file inside a `templates` directory with a content like so:
 
 ```html
 <!DOCTYPE html>
@@ -453,7 +450,7 @@ if errPq, ok := err.(*pq.Error); ok && errPq.Code.Name() == "not_null_violation"
 }
 ```
 
-This SQL query will insert a new verification code associated with the user with the given email. Because the user could not exist, that subquery can resolve to `NULL` which will fail the `NOT NULL` constraint on the "user_id" field so I do a check on that and return with `404 Not Found` in case or an internal error otherwise.
+This SQL query will insert a new verification code associated with a user with the given email and return the auto generated id. Because the user could not exist, that subquery can resolve to `NULL` which will fail the `NOT NULL` constraint on the `user_id` field so I do a check on that and return with `404 Not Found` in case or an internal error otherwise.
 
 ```go
 q := make(url.Values)
@@ -475,7 +472,7 @@ if err := magicLinkTmpl.Execute(&body, data); err != nil {
 }
 ```
 
-We'll execute that `magic-link.html` template against a buffer passing the magic link as string. In case of error I return with an internal error.
+We'll get the magic link template content saving it to a buffer. In case of error I return with an internal error.
 
 ```go
 to := mail.Address{Address: input.Email}
@@ -523,7 +520,7 @@ func sendMail(to mail.Address, subject, body string) error {
 }
 ```
 
-This function creates the structure of a basic HTML mail and sends it using the SMTP server. There is a lot of things you can customize of an email, but I kept it simple.
+This function creates the structure of a basic HTML mail and sends it using the SMTP server. There is a lot of things you can customize of a mail, but I kept it simple.
 
 ### Passwordless Verify Redirect Handler
 
@@ -581,7 +578,7 @@ if err := db.QueryRowContext(r.Context(), `
 }
 ```
 
-This SQL query deletes a verification code with the given id and makes sure has been created no more than 15 minutes ago, it also returns the `user_id` associated. In case of no rows, means the code didn't exist or it was expired so we respond with that, otherwise an internal error.
+This SQL query deletes a verification code with the given id and makes sure it has been created no more than 15 minutes ago, it also returns the `user_id` associated. In case of no rows, means the code didn't exist or it was expired so we respond with that, otherwise an internal error.
 
 ```go
 expiresAt := time.Now().Add(time.Hour * 24 * 60)
@@ -596,6 +593,7 @@ if err != nil {
 ```
 
 This is how the JWT is created. We set an expiration date for the JWT within 60 days.
+Maybe you can give it less time (~2 weeks) and add a new endpoint to refresh tokens, but I didn't want to add more complexity.
 
 ```go
 expiresAtB, err := expiresAt.MarshalText()
@@ -609,15 +607,15 @@ f.Set("expires_at", string(expiresAtB))
 callback.Fragment = f.Encode()
 ```
 
-We plan to redirect to the given redirect URI; you could use the query string to add the JWT, but I've seen that a hash fragment is used in APIs. Ex: `https://frontend.app/callback#jwt=token_here&expires_at=some_date`.
+We plan to redirect; you could use the query string to add the JWT, but I've seen that a hash fragment is more used. Ex: `https://frontend.app/callback#jwt=token_here&expires_at=some_date`.
 
-The expiration date could be extract from the JWT, but then the client will have to implement a JWT library to decode it, so to make the life easier I just added it there too.
+The expiration date could be extracted from the JWT, but then the client will have to implement a JWT library to decode it, so to make the life easier I just added it there too.
 
 ```go
 http.Redirect(w, r, callback.String(), http.StatusFound)
 ```
 
-Finally we just redirect to that URL with a `302 Found`.
+Finally we just redirect with a `302 Found`.
 
 ---
 
@@ -733,6 +731,6 @@ I decoupled it because fetching a user by ID is a common thing.
 
 ---
 
-That's all the code. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/) and the source code [here](https://github.com/nicolasparada/go-passwordless-demo).
+That's all the code. Build it an test it yourself. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/) and the source code [here](https://github.com/nicolasparada/go-passwordless-demo).
 
 I'll write a second part for this post condig a client for the API.
