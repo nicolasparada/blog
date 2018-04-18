@@ -137,6 +137,22 @@ pre code {
     font-size: 85%;
 }
 
+.share {
+    background-color: #151515;
+    padding: 1rem;
+    margin-top: 4rem;
+    display: flex;
+}
+
+.share a {
+    display: flex;
+    align-items: center;
+}
+
+.share a svg {
+    margin-right: .25rem;
+}
+
 @media screen and (max-width: 25.875rem) {
     .site-nav {
         padding: 0 1rem;
