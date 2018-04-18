@@ -16,6 +16,7 @@
 
 body {
     margin: 0;
+    padding-bottom: 4rem;
 }
 
 a {
@@ -38,6 +39,7 @@ h1, h2, h3, h4 {
 pre {
     display: block;
     background-color: #151515;
+    color: white;
     padding: 1rem;
     overflow-x: auto;
     -ms-overflow-style: -ms-autohiding-scrollbar;
