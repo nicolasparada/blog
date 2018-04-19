@@ -92,7 +92,7 @@ pre code {
 .social {
     margin-top: 1rem;
     display: flex;
-    margin-left: 100%;
+    justify-content: flex-end;
 }
 
 .social a {
