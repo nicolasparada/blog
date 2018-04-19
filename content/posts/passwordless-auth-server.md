@@ -74,7 +74,7 @@ I want you to set two environment variables: `SMTP_USERNAME` and `SMTP_PASSWORD`
 
 ## Go Dependencies
 
-For Go, we'll need the following packages:
+For Go we'll need the following packages:
 
 - [github.com/lib/pq](https://github.com/lib/pq): Postgres driver which CockroachDB uses.
 - [github.com/matryer/way](https://github.com/matryer/way): Router.
@@ -166,7 +166,7 @@ func main() {
 }
 ```
 
-First it opens a database connection. Remember to load the driver.
+First, it opens a database connection. Remember to load the driver.
 
 ```go
 import (
@@ -174,7 +174,7 @@ import (
 )
 ```
 
-Then we create the router and define some endpoints. For the passwordless flow we use two endpoints: `/api/passwordless/start` mails the magic link and `/api/passwordless/verify_redirect` respond with the JWT.
+Then, we create the router and define some endpoints. For the passwordless flow we use two endpoints: `/api/passwordless/start` mails the magic link and `/api/passwordless/verify_redirect` respond with the JWT.
 
 Finally, we start the server.
 
@@ -265,7 +265,7 @@ func respondJSON(w http.ResponseWriter, payload interface{}, code int) {
 }
 ```
 
-First it does a type assertion for primitive types to wrap they in a `map`. Then it marshalls to JSON, sets the response content type and status code, and writes the JSON. In case the JSON marshalling fails, it respond with an internal error.
+First, it does a type assertion for primitive types to wrap they in a `map`. Then it marshalls to JSON, sets the response content type and status code, and writes the JSON. In case the JSON marshalling fails, it respond with an internal error.
 
 ### Respond Internal Error Function
 
@@ -413,7 +413,7 @@ if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 defer r.Body.Close()
 ```
 
-First we decode the request body like before.
+First, we decode the request body like before.
 
 ```go
 errs := make(map[string]string)
@@ -489,7 +489,7 @@ To mail the user I make use of `sendMail` function that I'll code now. In case o
 w.WriteHeader(http.StatusNoContent)
 ```
 
-Finally I just set the response status code to `204 No Content`. The client doesn't need more data than a success status code.
+Finally, I just set the response status code to `204 No Content`. The client doesn't need more data than a success status code.
 
 ### Send Mail Function
 
@@ -732,6 +732,10 @@ I decoupled it because fetching a user by ID is a common thing.
 
 ---
 
-That's all the code. Build it and test it yourself. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/) and the source code [here](https://github.com/nicolasparada/go-passwordless-demo). Please leave any issues or leave any PR in the GitHub repo 👍
+That's all the code. Build it and test it yourself. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/).
 
-I'll write a second part for this post condig a client for the API.
+If you have problems about `Blocked script execution because the document's frame is sandboxed and the 'allow-scripts' permission is not set.` after clicking the magic link on mailtrap, try doing a right click + 'Open link in new tab'. This is a security thing where the mail content is "[sandboxed](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox)".
+
+Please leave any issues on the [GitHub repo](https://github.com/nicolasparada/go-passwordless-demo) or feel free to send PRs 👍
+
+I'll write a second part for this post coding a client for the API.
