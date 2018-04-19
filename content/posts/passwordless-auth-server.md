@@ -735,6 +735,7 @@ I decoupled it because fetching a user by ID is a common thing.
 That's all the code. Build it and test it yourself. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/).
 
 If you have problems about `Blocked script execution because the document's frame is sandboxed and the 'allow-scripts' permission is not set.` after clicking the magic link on mailtrap, try doing a right click + 'Open link in new tab'. This is a security thing where the mail content is "[sandboxed](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox)".
+I had this problem sometimes, but only on `localhost`. I think you should be fine once you deploy the server with `https://`.
 
 Please leave any issues on the [GitHub repo](https://github.com/nicolasparada/go-passwordless-demo) or feel free to send PRs 👍
 
