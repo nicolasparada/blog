@@ -1,4 +1,5 @@
 baseURL = "https://nicolasparada.netlify.com/"
 languageCode = "en-us"
 title = "Nicolás Parada"
+googleAnalytics = "UA-117854702-1"
 disqusShortname = "nicolasparada"
