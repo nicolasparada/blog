@@ -732,6 +732,6 @@ I decoupled it because fetching a user by ID is a common thing.
 
 ---
 
-That's all the code. Build it an test it yourself. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/) and the source code [here](https://github.com/nicolasparada/go-passwordless-demo).
+That's all the code. Build it and test it yourself. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/) and the source code [here](https://github.com/nicolasparada/go-passwordless-demo). Please leave any issues or leave any PR in the GitHub repo 👍
 
 I'll write a second part for this post condig a client for the API.
