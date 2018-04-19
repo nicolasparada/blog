@@ -34,6 +34,34 @@
                 link.target = '_blank'
         }
     </script>
+
+    <script>
+        const disqusShortName = {{ .Site.DisqusShortname }}
+        if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+            let disqusLoaded = false
+
+            const disqusThread = document.createElement('div')
+            disqusThread.id = 'disqus_thread'
+            document.querySelector('.container').appendChild(disqusThread)
+
+            const io = new IntersectionObserver(entries => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting && !disqusLoaded) {
+                        const script = document.createElement('script')
+                        script.async = true
+                        script.src = '//' + disqusShortName + '.disqus.com/embed.js'
+                        script.setAttribute('data-timestamp', new Date().toString())
+                        document.head.appendChild(script)
+
+                        disqusLoaded = true
+                        io.unobserve(disqusThread)
+                    }
+                }
+            })
+
+            io.observe(disqusThread)
+        }
+    </script>
 </body>
 
 </html>
