@@ -47,16 +47,18 @@
 
             const io = new IntersectionObserver(entries => {
                 for (const entry of entries) {
-                    if (entry.target === disqusThread && entry.isIntersecting && !disqusLoaded) {
-                        const script = document.createElement('script')
-                        script.async = true
-                        script.src = '//' + disqusShortName + '.disqus.com/embed.js'
-                        script.setAttribute('data-timestamp', new Date().toString())
-                        document.head.appendChild(script)
+                    if (entry.target !== disqusThread || !entry.isIntersecting || disqusLoaded)
+                        continue
 
-                        disqusLoaded = true
-                        io.unobserve(disqusThread)
-                    }
+                    const script = document.createElement('script')
+                    script.async = true
+                    script.src = '//' + disqusShortName + '.disqus.com/embed.js'
+                    script.setAttribute('data-timestamp', new Date().toString())
+                    document.head.appendChild(script)
+
+                    disqusLoaded = true
+                    io.unobserve(disqusThread)
+                    break
                 }
             })
 
