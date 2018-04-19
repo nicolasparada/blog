@@ -94,8 +94,8 @@ Create the `main.go` and start by getting some configuration from the environmen
 
 ```go
 var config struct {
-    appURL      *url.URL
     port        int
+    appURL      *url.URL
     databaseURL string
     jwtKey      []byte
     smtpAddr    string
@@ -103,8 +103,8 @@ var config struct {
 }
 
 func init() {
-    config.appURL, _ = url.Parse(env("APP_URL", "http://localhost/"))
     config.port, _ = strconv.Atoi(env("PORT", "80"))
+    config.appURL, _ = url.Parse(env("APP_URL", "http://localhost:"+strconv.Itoa(config.port)+"/"))
     config.databaseURL = env("DATABASE_URL", "postgresql://root@127.0.0.1:26257/passwordless_demo?sslmode=disable")
     config.jwtKey = []byte(env("JWT_KEY", "super-duper-secret-key"))
     smtpHost := env("SMTP_HOST", "smtp.mailtrap.io")
