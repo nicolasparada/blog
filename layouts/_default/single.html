@@ -41,14 +41,11 @@
     <script>
         const disqusShortName = {{ .Site.DisqusShortname }}
         if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
-            let disqusLoaded = false
-
             const disqusThread = document.getElementById('disqus_thread')
 
             const io = new IntersectionObserver(entries => {
                 for (const entry of entries) {
-                    if (entry.target !== disqusThread || entry.intersectionRatio === 0 || disqusLoaded)
-                        continue
+                    if (!entry.isIntersecting) continue
 
                     const script = document.createElement('script')
                     script.async = true
@@ -56,7 +53,6 @@
                     script.setAttribute('data-timestamp', new Date().toString())
                     document.head.appendChild(script)
 
-                    disqusLoaded = true
                     io.unobserve(disqusThread)
                     io.disconnect()
                     break
