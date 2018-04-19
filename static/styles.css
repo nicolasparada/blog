@@ -1,13 +1,18 @@
 :root {
-    background-color: #111;
+    --bg-root: black;
+    --bg: #171717;
+    --fg: white;
+    --accent: #09a;
+    --code: #bf616a;
+    --muted: #919191;
+    --border: rgba(255, 255, 255, .35);
+    background-color: var(--bg-root);
     box-sizing: border-box;
-    color: #ddd;
+    color: var(--fg);
     font-size: 19px;
     font-family: 'PT Sans', sans-serif;
     line-height: 1.5;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    -ms-scrollbar-base-color: black;
-    scrollbar-base-color: black;
 }
 
 *,
@@ -22,7 +27,7 @@ body {
 }
 
 a {
-    color: #09A;
+    color: var(--accent);
 }
 
 img {
@@ -39,21 +44,20 @@ h1, h2, h3, h4 {
 }
 
 hr {
-    border-color: rgba(255, 255, 255, .05);
+    border-color: var(--border);
     margin: 3rem 0;
 }
 
 pre {
     display: block;
-    background-color: #151515;
-    color: white;
+    background-color: var(--bg);
     padding: 1rem;
     overflow-x: auto;
 }
 
 code {
-    background-color: #151515;
-    color: #BF616A;
+    background-color: var(--bg);
+    color: var(--code);
     font-family: 'Fira Mono', monospace;
     padding: 0 .25rem;
     font-size: .8125rem;
@@ -67,7 +71,7 @@ pre code {
 }
 
 .site-nav {
-    border-bottom: .0625rem solid rgba(255, 255, 255, .05);
+    border-bottom: 1px solid var(--border);
     padding: 0 2rem;
     height: 3rem;
     display: flex;
