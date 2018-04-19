@@ -393,7 +393,7 @@ We'll use the golang template engine to build the mailing so I'll need you to cr
     <title>Magic Link</title>
 </head>
 <body>
-    Click <a href="{{ .MagicLink }}">here</a> to login.
+    Click <a href="{{ .MagicLink }}" target="_blank">here</a> to login.
     <br>
     <em>This link expires in 15 minutes and can only be used once.</em>
 </body>
