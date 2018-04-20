@@ -60,7 +60,7 @@
 
         const observer = new IntersectionObserver(entries => {
             for (const entry of entries) {
-                if (!entry.isIntersecting && loadingGitalk) continue
+                if (!entry.isIntersecting || loadingGitalk) continue
 
                 loadingGitalk = true
 
