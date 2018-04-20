@@ -77,7 +77,7 @@
                         id: '{{ .UniqueID }}',
                     })
 
-                    gitalk.render('comments')
+                    gitalk.render(comments)
 
                     observer.unobserve(comments)
                     observer.disconnect()
