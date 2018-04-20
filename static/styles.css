@@ -109,6 +109,11 @@ pre code {
     margin-left: 1rem;
 }
 
+.social svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
 .index {
     margin-top: 1rem;
     font-weight: 400;
@@ -141,25 +146,26 @@ pre code {
     font-size: 85%;
 }
 
-.share {
+.post-actions {
     background-color: #151515;
     padding: 1rem;
     margin-top: 3rem;
-    display: flex;
 }
 
-.share a {
+.post-actions a {
     display: flex;
     align-items: center;
+    color: inherit;
 }
 
-.share a svg {
-    margin-right: .25rem;
+.post-actions a + a {
+    margin-top: 1rem;
 }
 
-.hashnode {
-    display: block;
-    margin-top: 3rem;
+.post-actions a svg {
+    margin-right: .5rem;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 @media screen and (max-width: 25.875rem) {
