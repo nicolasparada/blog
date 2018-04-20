@@ -58,7 +58,6 @@
 
         const comments = document.getElementById('comments')
 
-
         const observer = new IntersectionObserver(entries => {
             for (const entry of entries) {
                 if (!entry.isIntersecting && loadingGitalk) continue
@@ -87,7 +86,9 @@
             }
         })
 
-        observer.observe(comments)
+        if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+            observer.observe(comments)
+        }
     </script>
 
     {{ template "_internal/google_analytics_async.html" . }}
