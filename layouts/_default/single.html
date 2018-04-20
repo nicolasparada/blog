@@ -75,6 +75,7 @@
                         repo: 'blog',
                         owner: 'nicolasparada',
                         admin: ['nicolasparada'],
+                        id: decodeURI("{{ .UniqueID }}").substr(0, 50),
                     })
 
                     gitalk.render('comments')
