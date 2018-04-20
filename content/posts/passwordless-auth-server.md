@@ -1,6 +1,7 @@
 ---
 title: "Passwordless Auth: Server"
 description: "Coding a passwordless auth HTTP service in Go"
+keywords: ["golang", "sql"]
 date: 2018-04-18T10:36:23-03:00
 tweet_id: 986602458716803074
 draft: false
