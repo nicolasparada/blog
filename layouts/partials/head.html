@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{- if eq .Kind "page" }}{{ .Title }}{{ else }}{{ .Site.Title }}{{ end -}}</title>
-    {{- if eq .Kind "page" }}<meta name="description" content="{{ .Summary }}">{{ end -}}
+    {{- if eq .Kind "page" }}<meta name="description" content="{{ .Description }}">{{ end -}}
     <meta name="author" content="Nicolás Parada">
     <link rel="shortcut icon" href="data:;">
     <link href="https://fonts.googleapis.com/css?family=Fira+Mono|PT+Sans:400,400i,700,700i|PT+Serif" rel="stylesheet">
