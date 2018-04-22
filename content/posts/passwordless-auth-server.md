@@ -14,19 +14,19 @@ I'll show you how to code an HTTP API in [Go](https://golang.org/) that provides
 ## Flow
 
 - User inputs his email.
-- Server creates a temporal on-time-use code associated with the user (like a temporal password) and mails it to the user in form of a "magic link".
+- Server creates a temporal on-time-use code associated with the user (like a temporal password) and mails it to the user in the form of a "magic link".
 - User clicks the magic link.
-- Server extract the code from the magic link, fetch the user associated and redirects to the client with a new JWT.
+- Server extracts the code from the magic link, fetch the user associated and redirects to the client with a new JWT.
 - Client will use the JWT in every new request to authenticate the user.
 
 ## Requisites
 
-- Database: We'll use an SQL database called [CockroachDB](https://www.cockroachlabs.com/) for this. It's much like postgres, but writen in Go.
-- SMTP Server: To send mails we'll use a third party mailing service. For development we'll use [mailtrap](https://mailtrap.io/). Mailtrap sends all the mails to it's inbox, so you don't have to create multiple fake email accounts to test it.
+- Database: We'll use an SQL database called [CockroachDB](https://www.cockroachlabs.com/) for this. It's much like postgres, but written in Go.
+- SMTP Server: To send mails we'll use a third party mailing service. For development, we'll use [mailtrap](https://mailtrap.io/). Mailtrap sends all the mails to its inbox, so you don't have to create multiple fake email accounts to test it.
 
-Install Go from [it's page](https://golang.org/dl/) and check your installation went ok with `go version` (1.10.1 atm).
+Install Go from [its page](https://golang.org/dl/) and check your installation went OK with `go version` (1.10.1 ATM).
 
-Download CockroachDB from [it's page](https://www.cockroachlabs.com/docs/stable/install-cockroachdb.html), extract it and add it to your `PATH`. Check that all went ok with `cockroach version` (2.0 atm).
+Download CockroachDB from [its page](https://www.cockroachlabs.com/docs/stable/install-cockroachdb.html), extract it and add it to your `PATH`. Check that all went OK with `cockroach version` (2.0 ATM).
 
 ## Database Schema
 
@@ -36,7 +36,7 @@ Now, create a new directory for the project inside `GOPATH` and start a new Cock
 cockroach start --insecure --host 127.0.0.1
 ```
 
-It will print some things, but check the SQL address line, it should said something like `postgresql://root@127.0.0.1:26257?sslmode=disable`. We'll use this to connect to the database later.
+It will print some things, but check the SQL address line, it should say something like `postgresql://root@127.0.0.1:26257?sslmode=disable`. We'll use this to connect to the database later.
 
 Create a `schema.sql` file with the following content.
 
@@ -64,7 +64,7 @@ INSERT INTO users (email, username) VALUES
 This script creates a database `passwordless_demo`, two tables: `users` and `verification_codes`, and inserts a fake user just to test it later.
 Each verification code is associated with a user and stores the creation date, useful to check if the code is expired or not.
 
-To execute this script use `cockroach sql` in other terminal:
+To execute this script use `cockroach sql` in another terminal:
 
 ```sql
 cat schema.sql | cockroach sql --insecure
@@ -76,7 +76,7 @@ I want you to set two environment variables: `SMTP_USERNAME` and `SMTP_PASSWORD`
 
 ## Go Dependencies
 
-For Go we'll need the following packages:
+For Go, we'll need the following packages:
 
 - [github.com/lib/pq](https://github.com/lib/pq): Postgres driver which CockroachDB uses.
 - [github.com/matryer/way](https://github.com/matryer/way): Router.
@@ -135,11 +135,11 @@ func env(key, fallbackValue string) string {
 - `port` in which the HTTP server will start.
 - `databaseURL` is the CockroachDB address, I added `/passwordless_demo` to the previous address to indicate the database name.
 - `jwtKey` used to sign JWTs.
-- `smtpAddr` is a join of `SMTP_HOST` + `SMTP_PORT`; we'll use it to to send mails.
+- `smtpAddr` is a joint of `SMTP_HOST` + `SMTP_PORT`; we'll use it to to send mails.
 - `smtpUsername` and `smtpPassword` are the two required vars.
 - `smtpAuth` is also used to send mails.
 
-The `env` function allow us to get an environment variable with a fallback value in case it doesn't exist.
+The `env` function allows us to get an environment variable with a fallback value in case it doesn't exist.
 
 ### Main Function
 
@@ -180,7 +180,7 @@ Then, we create the router and define some endpoints. For the passwordless flow 
 
 Finally, we start the server.
 
-You can create empty handlers and middlewares to test that the server starts.
+You can create empty handlers and middleware to test that the server starts.
 
 ```go
 func createUser(w http.ResponseWriter, r *http.Request) {
@@ -220,7 +220,7 @@ go build
 ```
 
 I'm on a directory called "passwordless-demo", but if yours is different, `go build` will create an executable with that name.
-If you didn't close the previous cockroach node and you setted `SMTP_USERNAME` and `SMTP_PASSWORD` vars correctly, you should see `starting server at http://localhost/ 🚀` without errors.
+If you didn't close the previous cockroach node and you set `SMTP_USERNAME` and `SMTP_PASSWORD` vars correctly, you should see `starting server at http://localhost/ 🚀` without errors.
 
 ### JSON Required Middleware
 
@@ -240,11 +240,11 @@ func jsonRequired(next http.HandlerFunc) http.HandlerFunc {
 }
 ```
 
-As easy as that. First it gets the request content type from the headers, then check if it starts with "application/json", otherwise it early return with `415 Unsupported Media Type`.
+As easy as that. First, it gets the request content type from the headers, then check if it starts with "application/json", otherwise it early return with `415 Unsupported Media Type`.
 
 ### Respond JSON Function
 
-Responding with JSON is also a common thing so I extracted it to a function.
+Responding with JSON is also a common thing, so I extracted it to a function.
 
 ```go
 func respondJSON(w http.ResponseWriter, payload interface{}, code int) {
@@ -267,11 +267,11 @@ func respondJSON(w http.ResponseWriter, payload interface{}, code int) {
 }
 ```
 
-First, it does a type assertion for primitive types to wrap they in a `map`. Then it marshalls to JSON, sets the response content type and status code, and writes the JSON. In case the JSON marshalling fails, it respond with an internal error.
+First, it does a type assertion for primitive types to wrap them in a `map`. Then it marshalls to JSON, sets the response content type and status code, and writes the JSON. In case the JSON marshalling fails, it responds with an internal error.
 
 ### Respond Internal Error Function
 
-`respondInternalError` is a funcion that respond with `500 Internal Server Error`, but it also logs the error to the console.
+`respondInternalError` is a function that responds with `500 Internal Server Error`, but it also logs the error to the console.
 
 ```go
 func respondInternalError(w http.ResponseWriter, err error) {
@@ -284,7 +284,7 @@ func respondInternalError(w http.ResponseWriter, err error) {
 
 ### Create User Handler
 
-I'll start coding the `createUser` handler because is the more easy and REST-ish.
+I'll start coding the `createUser` handler because is the easiest and REST-ish.
 
 ```go
 type User struct {
@@ -303,9 +303,9 @@ var (
 )
 ```
 
-These regular expressions are to validate email and username respectively. These are very basic, feel free to adapt they as you need.
+These regular expressions are to validate email and username respectively. These are very basic, feel free to adapt them as you need.
 
-Now, **inside** `createUser` function we'll start by decoding the request body.
+Now, **inside** `createUser` function, we'll start by decoding the request body.
 
 ```go
 var user User
@@ -316,7 +316,7 @@ if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 defer r.Body.Close()
 ```
 
-We create a JSON decoder using the request body and decode to a user pointer. In case of error we return with a `400 Bad Request`. Don't forget to close the body reader.
+We create a JSON decoder using the request body and decode to a user pointer. In case of an error, we return with a `400 Bad Request`. Don't forget to close the body reader.
 
 ```go
 errs := make(map[string]string)
@@ -367,7 +367,7 @@ Because the `users` table had unique constraints on the `email` and `username` f
 respondJSON(w, user, http.StatusCreated)
 ```
 
-Finally I just respond with the created user.
+Finally, I just respond with the created user.
 
 ### Passwordless Start Handler
 
@@ -384,7 +384,7 @@ This struct holds the `passwordlessStart` request body. The email of the user wh
 var magicLinkTmpl = template.Must(template.ParseFiles("templates/magic-link.html"))
 ```
 
-We'll use the golang template engine to build the mailing so I'll need you to create a `magic-link.html` file inside a `templates` directory with a content like so:
+We'll use the golang template engine to build the mailing so I'll need you to create a `magic-link.html` file in a `templates` directory with a content like so:
 
 ```html
 <!DOCTYPE html>
@@ -453,7 +453,7 @@ if errPq, ok := err.(*pq.Error); ok && errPq.Code.Name() == "not_null_violation"
 }
 ```
 
-This SQL query will insert a new verification code associated with a user with the given email and return the auto generated id. Because the user could not exist, that subquery can resolve to `NULL` which will fail the `NOT NULL` constraint on the `user_id` field so I do a check on that and return with `404 Not Found` in case or an internal error otherwise.
+This SQL query will insert a new verification code associated with a user with the given email and return the auto generated id. Because the user could not exist, that subquery can resolve to `NULL` which will fail the `NOT NULL` constraint on the `user_id` field, so I do a check on that and return with `404 Not Found` in the case or an internal error otherwise.
 
 ```go
 q := make(url.Values)
@@ -464,7 +464,7 @@ magicLink.Path = "/api/passwordless/verify_redirect"
 magicLink.RawQuery = q.Encode()
 ```
 
-Now, I build the magic link and set the `verification_code` and `redirect_uri` inside the query string. Ex: `http://localhost/api/passwordless/verify_redirect?verification_code=some_code&redirect_uri=https://frontend.app/callback`.
+Now, I build the magic link, and set the `verification_code` and `redirect_uri` in the query string. Ex: `http://localhost/api/passwordless/verify_redirect?verification_code=some_code&redirect_uri=https://frontend.app/callback`.
 
 ```go
 var body bytes.Buffer
@@ -485,7 +485,7 @@ if err := sendMail(to, "Magic Link", body.String()); err != nil {
 }
 ```
 
-To mail the user I make use of `sendMail` function that I'll code now. In case of error I return with an internal error.
+To mail the user I make use of a `sendMail` function that I'll code now. In case of error I return with an internal error.
 
 ```go
 w.WriteHeader(http.StatusNoContent)
@@ -523,7 +523,7 @@ func sendMail(to mail.Address, subject, body string) error {
 }
 ```
 
-This function creates the structure of a basic HTML mail and sends it using the SMTP server. There is a lot of things you can customize of a mail, but I kept it simple.
+This function creates the structure of a basic HTML mail and sends it using the SMTP server. There are a lot of things you can customize of an email, but I kept it simple.
 
 ### Passwordless Verify Redirect Handler
 
@@ -531,7 +531,7 @@ This function creates the structure of a basic HTML mail and sends it using the 
 var rxUUID = regexp.MustCompile("^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
 ```
 
-First, this regular expression is to validate an UUID (the verification code).
+First, this regular expression is to validate a UUID (the verification code).
 
 Now, **inside** `passwordlessVerifyRedirect` function:
 
@@ -541,7 +541,7 @@ verificationCode := q.Get("verification_code")
 redirectURI := q.Get("redirect_uri")
 ```
 
-`/api/passwordless/verify_redirect` is a `GET` endpoint so we read data from the query string.
+`/api/passwordless/verify_redirect` is a `GET` endpoint, so we read data from the query string.
 
 ```go
 errs := make(map[string]string)
@@ -618,11 +618,11 @@ The expiration date could be extracted from the JWT, but then the client will ha
 http.Redirect(w, r, callback.String(), http.StatusFound)
 ```
 
-Finally we just redirect with a `302 Found`.
+Finally, we just redirect with a `302 Found`.
 
 ---
 
-The passwordless flow is completed. Now we just need to code the `getAuthUser` endpoint which is to get info about the current authenticated user. If you rememeber, this endpoint makes use of `authRequired` middleware.
+The passwordless flow is completed. Now we just need to code the `getAuthUser` endpoint which is to get info about the current authenticated user. If you remember, this endpoint makes use of `authRequired` middleware.
 
 ### With Auth Middleware
 
@@ -691,7 +691,7 @@ func authRequired(next http.HandlerFunc) http.HandlerFunc {
 }
 ```
 
-Now, `authRequired` will make use of `withAuth` and will try to extract the authenticated user ID from the request context. If fails, it returns with `401 Unauthorized` otherwise continues.
+Now, `authRequired` will make use of `withAuth` and will try to extract the authenticated user ID from the request context. If it fails, it returns with `401 Unauthorized` otherwise continues.
 
 ### Get Auth User
 
@@ -713,8 +713,8 @@ if err == sql.ErrNoRows {
 respondJSON(w, user, http.StatusOK)
 ```
 
-First we extract the ID of the authenticated user from the request context, we use that to fetch the user. In case of no row returned, we send a `418 I'm a teapot` or an internal error otherwise.
-Lastly we just respond with the user 😊
+First, we extract the ID of the authenticated user from the request context, we use that to fetch the user. In case of no row returned, we send a `418 I'm a teapot` or an internal error otherwise.
+Lastly, we just respond with the user 😊
 
 ### Fetch User Function
 
@@ -739,6 +739,6 @@ That's all the code. Build it and test it yourself. You can try a live demo [her
 If you have problems about `Blocked script execution because the document's frame is sandboxed and the 'allow-scripts' permission is not set` after clicking the magic link on mailtrap, try doing a right click + "Open link in new tab". This is a security thing where the mail content is [sandboxed](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox).
 I had this problem sometimes on `localhost`, but I think you should be fine once you deploy the server with `https://`.
 
-Please leave any issues on the [GitHub repo](https://github.com/nicolasparada/go-passwordless-demo) or feel free to send PRs 👍
+Please leave any issues on the [GitHub repo](https://github.com/nicolasparada/go-passwordless-demo), PRs are welcome too 👍
 
 I'll write a second part for this post coding a client for the API.
