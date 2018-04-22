@@ -299,7 +299,7 @@ The `User` type is just like the `users` table.
 ```go
 var (
     rxEmail = regexp.MustCompile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
-    rxUsername = regexp.MustCompile("^[a-zA-Z][\\w|-]{1,17}$")
+    rxUsername = regexp.MustCompile("^[a-zA-Z][\\w|-]{0,17}$")
 )
 ```
 
