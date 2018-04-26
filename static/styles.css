@@ -1,7 +1,7 @@
 :root {
-    --bg-root: black;
-    --bg: #171717;
-    --fg: white;
+    --bg-root: #111;
+    --bg: #151515;
+    --fg: #ddd;
     --accent: #09a;
     --code: #bf616a;
     --muted: #919191;
@@ -11,7 +11,7 @@
     color: var(--fg);
     font-size: 19px;
     font-family: 'PT Sans', sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
@@ -53,6 +53,7 @@ pre {
     background-color: var(--bg);
     padding: 1rem;
     overflow-x: auto;
+    line-height: 1.3;
 }
 
 code {
