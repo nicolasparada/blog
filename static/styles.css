@@ -137,6 +137,10 @@ pre code {
     justify-content: space-between;
 }
 
+.post-item + .post-item {
+    margin-top: .25rem;
+}
+
 .post-title {
     margin-bottom: 0;
 }
