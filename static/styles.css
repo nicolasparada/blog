@@ -90,7 +90,7 @@ pre code {
 
 .site-phrase {
     margin-left: .25rem;
-    color: #9A9A9A;
+    color: var(--muted);
 }
 
 .social {
@@ -146,12 +146,12 @@ pre code {
 }
 
 .post-date {
-    color: #9A9A9A;
+    color: var(--muted);
     font-size: 85%;
 }
 
 .post-actions {
-    background-color: #151515;
+    background-color: var(--bg);
     padding: 1rem;
     margin-top: 3rem;
 }
