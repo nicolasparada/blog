@@ -61,9 +61,9 @@ console.log(router.exec('/users/john')) // john's page
 console.log(router.exec('/foo')) // not found page
 ```
 
-To use it you add handlers for a URL pattern. This pattern can be a simple string or a regular expression. Using a string will match exactly that, but using a regular expression allows you to do fancy things like extract parameters from the URL as seen on the `userPageHandler` or match any URL as seen on the `notFoundPageHandler`.
+To use it you add handlers for a URL pattern. This pattern can be a simple string or a regular expression. Using a string will match exactly that, but using a regular expression allows you to do fancy things like extract parameters from the URL as seen on `userPageHandler` or match any URL as seen on `notFoundPageHandler`.
 
-I'll explain what does that `exec` method... As I said, the URL pattern can be a string or regular expression, so it first checks for a string. In case the pattern is equal to the given pathname, it returns the execution of the handler. If it is not a string, then it's a regular expression, so it uses the `.exec()` method of the regexp against the given pathname, in case it matches, it returns the execution of the handler passing to it the parameters with `match.slice(1)`.
+I'll explain what does that `exec` method... As I said, the URL pattern can be a string or a regular expression, so it first checks for a string. In case the pattern is equal to the given pathname, it returns the execution of the handler. If it is not a string, then it's a regular expression, so it uses the `.exec()` method of the regexp against the given pathname. In case it matches, it returns the execution of the handler passing to it the parameters with `match.slice(1)`.
 
 ## Working example
 
@@ -101,7 +101,7 @@ npm i -g serve
 serve -s
 ```
 
-Now, that HTML file loads the script `main.js` as a module. It has a `<nav>` and a  `<div id=page-outlet>` in which we'll render the corresponding page.
+That HTML file loads the script `main.js` as a module. It has a `<nav>` and a  `<div id=page-outlet>` in which we'll render the corresponding page.
 
 I moved the previous `Router` class to a `router.js` file.
 
@@ -145,18 +145,18 @@ const page = router.exec(decodeURI(location.pathname))
 pageOutlet.appendChild(page)
 ```
 
-Now the handlers... instead of returning some message text, they return actual DOM; in this case, they all return a `HTMLHeadingElement` (`<h1>`).
+Now the handlers... instead of returning some message text, they return actual DOM; in this case, they all return a `HTMLHeadingElement` (`<h1>`), but you can return any instance of `Node` like a `DocumentFragment` or a `HTMLTemplateElement` content.
 
-Below, we call to `router.exec()` passing `location.pathname` and append the result to the page outlet div.
+Below, we call `router.exec()` passing `location.pathname` and append the result to the page outlet div.
 
 *We decode `location.pathname` to not get weird symbols in the params.*
 
-If you go to localhost and play with it. You'll see that it works, but not as you expect from a SPA. Single page applications shouldn't refresh when you click on links.
+If you go to localhost and play with it. You'll see that it works, but not as you expect from an SPA. Single page applications shouldn't refresh when you click on links.
 
 We'll have to attach click event listeners to each anchor tag, prevent the default behavior and do the correct rendering.
 Because a single page application is something dynamic, you expect creating anchor links on the fly so to add the event listeners I'll use a technique called [event delegation](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_delegation).
 
-So, I'll add a click event listener globally and check if that click was on an anchor link or inside one.
+I'll add a click event listener globally and check if that click was on an anchor link or inside one and walk up the parents until finding it.
 
 In the `Router` class I'll add a static method:
 
@@ -294,7 +294,6 @@ In the `render` function:
 
 ```js
 const disconnectEvent = new CustomEvent('disconnect')
-
 async function render() {
     if (currentPage instanceof Node) {
         currentPage.dispatchEvent(disconnectEvent)
