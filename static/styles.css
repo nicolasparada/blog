@@ -2,6 +2,7 @@
     --bg-root: #111;
     --bg: #151515;
     --fg: #ddd;
+    --strong: #ccc;
     --accent: #1fbcaf;
     --code: #bf616a;
     --muted: #919191;
@@ -51,6 +52,7 @@ hr {
 pre {
     display: block;
     background-color: var(--bg);
+    color: var(--strong);
     padding: 1rem;
     overflow-x: auto;
     line-height: 1.3;
