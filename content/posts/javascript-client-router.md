@@ -3,6 +3,7 @@ title: "JavaScript Client Router"
 description: "Router for building Single Page Applications with JavaScript"
 tags: ["javascript"]
 date: 2018-04-25T22:21:12-03:00
+tweet_id: 989317009900036097
 draft: false
 ---
 
