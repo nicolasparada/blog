@@ -304,7 +304,7 @@ This function uses a `Map` to save in memory modules once you import them. Now w
 function view(name) {
     return (...args) => importWithCache(`/pages/${name}-page.js`)
         .then(m => m.default)
-        .then(page => page(...args))
+        .then(h => h(...args))
 }
 ```
 
