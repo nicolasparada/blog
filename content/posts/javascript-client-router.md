@@ -259,6 +259,30 @@ async function render() {
 
 Dynamic import is so cool, but you must know it doesn't have good support yet. It's a stage 3 proposal; only Chrome and Safari by the moment. The good news is, it's [polyfillable](https://gist.github.com/tbranyen/9496397c3f422ebadc382e7daffc1dc6).
 
+## Loading Indicator
+
+Now that we have code-splitting, pages won't load instantly, so add a "loading" message to the HTML code:
+
+```html
+<div id="page-outlet">
+    Loading...
+</div>
+```
+
+Now, before starting to load the page, we'll show this message and after the page has loaded, we'll clear it.
+
+```js
+const loadingHTML = pageOutlet.innerHTML
+
+function render() {
+    if (currentPage instanceof Node)
+        pageOutlet.innerHTML = loadingHTML
+    currentPage = await router.exec(decodeURI(location.pathname))
+    pageOutlet.innerHTML = ''
+    pageOutlet.appendChild(currentPage)
+}
+```
+
 ## Caching
 
 Of course, you can go as far as you want, but I've found very useful caching the page handlers when using dynamic import.
