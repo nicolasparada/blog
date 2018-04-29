@@ -288,26 +288,30 @@ function render() {
 Of course, you can go as far as you want, but I've found very useful caching the page handlers when using dynamic import.
 
 ```js
-const pageHandlersCache = new Map()
-function genPage(name) {
-    return async (...args) => {
-        if (pageHandlersCache.has(name)) {
-            const pageHandler = pageHandlersCache.get(name)
-            return pageHandler(...args)
-        }
-        const pageHandler = await import(`/pages/${name}-page.js`).then(m => m.default)
-        pageHandlersCache.set(name, pageHandler)
-        return pageHandler(...args)
-    }
+const modulesCache = new Map()
+async function importWithCache(specifier) {
+    if (modulesCache.has(specifier))
+        return modulesCache.get(specifier)
+    const m = await import(specifier)
+    modulesCache.set(specifier, m)
+    return m
 }
 ```
 
-This function uses a `Map` to save in memory the handlers once you import them.
+This function uses a `Map` to save in memory modules once you import them. Now we can do a wrapper over it to import the page handlers.
 
 ```js
-router.handle('/', genPage('home'))
-router.handle(/^\/users\/([^\/]+)$/, genPage('user'))
-router.handle(/^\//, genPage('not-found'))
+function view(name) {
+    return (...args) => importWithCache(`/pages/${name}-page.js`)
+        .then(m => m.default)
+        .then(page => page(...args))
+}
+```
+
+```js
+router.handle('/', view('home'))
+router.handle(/^\/users\/([^\/]+)$/, view('user'))
+router.handle(/^\//, view('not-found'))
 ```
 
 ## Disconnect
