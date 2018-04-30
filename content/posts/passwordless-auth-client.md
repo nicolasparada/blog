@@ -66,7 +66,7 @@ function view(name) {
         .then(h => h(...args))
 }
 
-function guard(fn1, fn2 = view('not-found')) {
+function guard(fn1, fn2) {
     return (...args) => isAuthenticated()
         ? fn1(...args)
         : fn2(...args)
