@@ -3,7 +3,7 @@ title: "Passwordless Auth: Client"
 description: "Coding a client in JavaScript for a passwordless auth HTTP API"
 tags: ["javascript"]
 date: 2018-04-29T22:18:24-03:00
-tweet_id:
+tweet_id: 990763235065450496
 draft: false
 ---
 
