@@ -741,4 +741,4 @@ I had this problem sometimes on `localhost`, but I think you should be fine once
 
 Please leave any issues on the [GitHub repo](https://github.com/nicolasparada/go-passwordless-demo), PRs are welcome too 👍
 
-I'll write a second part for this post coding a client for the API.
+~~I'll write a second part for this post coding a client for the API.~~ Read how to code a JavaScript client for this API [here](/posts/passwordless-auth-client/).
