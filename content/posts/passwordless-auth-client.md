@@ -205,7 +205,7 @@ template.innerHTML = `
 <h1>Passwordless Demo</h1>
 <h2>Access</h2>
 <form id="access-form">
-    <input type="email"  name="email" placeholder="Email" required>
+    <input type="email" name="email" placeholder="Email" required>
     <button type="submit">Send Magic Link</button>
 </form>
 `
