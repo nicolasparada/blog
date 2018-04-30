@@ -1,8 +1,8 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
-description: ""
+description:
 tags: []
 date: {{ .Date }}
-tweet_id: 0
+tweet_id:
 draft: true
 ---
