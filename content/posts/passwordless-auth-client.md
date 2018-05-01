@@ -313,8 +313,6 @@ To remember... when clicking the magic link, we go to `/api/passwordless/verify_
 
 The callback page handler decodes the hash from the URL to extract those parameters to do a `GET` request to `/api/auth_user` with the JWT saving all the data to `localStorage`. Finally, it just redirects to home.
 
-*`URLSearchParams` may have poor support. Go for a polyfill if you need one.*
-
 ## Home Page
 
 Create a `static/pages/home-page.js` file with the following content:
