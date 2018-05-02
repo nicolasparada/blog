@@ -7,7 +7,7 @@ const staticUrlsToCache = [
     '/offline.html',
     '/styles.css',
 ]
-const viewsCacheName = 'views-cache-v${VERSION}'
+const viewsCacheName = `views-cache-v${VERSION}`
 const cacheWhitelist = [
     staticCacheName,
     viewsCacheName,
