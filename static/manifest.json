@@ -1,0 +1,9 @@
+{
+    "name": "Nicolás Parada's Blog",
+    "short_name": "Nicolás Parada",
+    "start_url": "/?utm_source=homescreen",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#000",
+    "background_color": "#000"
+}
