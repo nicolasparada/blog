@@ -21,7 +21,6 @@ const observer = new IntersectionObserver(entries => {
                 id: '{{ .UniqueID }}',
             })
 
-            comments.hidden = false
             gitalk.render(comments)
 
             observer.unobserve(comments)
