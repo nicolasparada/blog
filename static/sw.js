@@ -26,12 +26,12 @@ function cleanOldCache() {
 }
 
 function viewsCacheResponse(ev) {
-    return caches.open(viewsCacheName)
-        .then(cache => cache.match(ev.request).then(res => res || fetch(ev.request).then(res => {
+    return fetch(ev.request)
+        .then(res => caches.open(viewsCacheName).then(cache => {
             cache.put(ev.request, res.clone())
             return res
-        })))
-        .catch(() => caches.match('/offline.html'))
+        }))
+        .catch(() => caches.match(ev.request).then(res => res || caches.match('/offline.html')))
 }
 
 self.addEventListener('install', function onInstall(ev) {
@@ -47,6 +47,4 @@ self.addEventListener('fetch', function onFetch(ev) {
         ev.respondWith(viewsCacheResponse(ev))
         return
     }
-
-    ev.respondWith(fetch(ev.request))
 })
