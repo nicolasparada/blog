@@ -27,7 +27,7 @@
             {{ end -}}
         </div>
 
-        <div id="comments" class="comments"></div>
+        <div id="comments" class="comments" data-id="{{ .UniqueID }}"></div>
     </div>
 
     {{ template "_internal/google_analytics_async.html" . }}

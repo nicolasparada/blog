@@ -1,4 +1,4 @@
-const VERSION = 4
+const VERSION = 5
 const staticCacheName = `static-v${VERSION}`
 const staticUrlsToCache = [
     '/comments.js',

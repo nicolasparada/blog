@@ -1,6 +1,7 @@
 let loadingGitalk = false
 
 const comments = document.getElementById('comments')
+const id = comments.dataset['id']
 
 const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
@@ -18,7 +19,7 @@ const observer = new IntersectionObserver(entries => {
                 repo: 'blog',
                 owner: 'nicolasparada',
                 admin: ['nicolasparada'],
-                id: '{{ .UniqueID }}',
+                id,
             })
 
             gitalk.render(comments)
