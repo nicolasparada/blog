@@ -11,40 +11,60 @@ const cacheWhitelist = [
     viewsCacheName,
 ]
 
-function cacheStaticUrls() {
-    return caches.open(staticCacheName)
-        .then(cache => cache.addAll(staticUrlsToCache))
+async function cacheStaticUrls() {
+    const cache = await caches.open(staticCacheName)
+    return cache.addAll(staticUrlsToCache)
 }
 
-function cleanOldCache() {
-    return caches.keys()
-        .then(cacheNames => Promise.all(
-            cacheNames
-                .filter(cacheName => !cacheWhitelist.includes(cacheName))
-                .map(cacheName => caches.delete(cacheName))
-        ))
-}
-
-function viewsCacheResponse(ev) {
-    return fetch(ev.request)
-        .then(res => caches.open(viewsCacheName).then(cache => {
-            cache.put(ev.request, res.clone())
-            return res
-        }))
-        .catch(() => caches.match(ev.request).then(res => res || caches.match('/offline.html')))
-}
-
-self.addEventListener('install', function onInstall(ev) {
+function onInstall(ev) {
     ev.waitUntil(cacheStaticUrls())
-})
+}
 
-self.addEventListener('activate', function onActivate(ev) {
+async function cleanOldCache() {
+    const cacheNames = await caches.keys()
+    const promises = cacheNames
+        .filter(cacheName => !cacheWhitelist.includes(cacheName))
+        .map(cacheName => caches.delete(cacheName))
+    return Promise.all(promises)
+}
+
+function onActivate(ev) {
     ev.waitUntil(cleanOldCache())
-})
+}
 
-self.addEventListener('fetch', function onFetch(ev) {
-    if (ev.request.mode === 'navigate') {
+async function viewsCacheResponse(ev) {
+    try {
+        const res = await fetch(ev.request)
+        const cache = await caches.open(viewsCacheName)
+        cache.put(ev.request, res.clone())
+        return res
+    } catch (_) {
+        const res = await caches.match(ev.request)
+        return res
+            ? res
+            : caches.match('/offline.html')
+    }
+}
+
+async function staticCacheResponse(ev) {
+    const res = await caches.match(ev.request)
+    return res
+        ? res
+        : fetch(ev.request)
+}
+
+function onFetch(ev) {
+    const url = new URL(ev.request.url)
+
+    if (ev.request.mode === 'navigate' && url.pathname.endsWith('/')) {
         ev.respondWith(viewsCacheResponse(ev))
         return
     }
-})
+
+    if (ev.request.method === 'GET' && url.origin === location.origin && staticUrlsToCache.includes(url.pathname))
+        ev.respondWith(staticCacheResponse(ev))
+}
+
+self.addEventListener('install', onInstall)
+self.addEventListener('activate', onActivate)
+self.addEventListener('fetch', onFetch)
