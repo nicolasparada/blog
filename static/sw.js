@@ -1,8 +1,9 @@
-const VERSION = 1
+const VERSION = 2
 const staticCacheName = `static-cache-v${VERSION}`
 const staticUrlsToCache = [
     '/comments.js',
     '/external-links.js',
+    '/manifest.json',
     '/offline.html',
     '/styles.css',
 ]
