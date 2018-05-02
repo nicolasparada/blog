@@ -1,5 +1,5 @@
-const VERSION = 2
-const staticCacheName = `static-cache-v${VERSION}`
+const VERSION = 3
+const staticCacheName = `static-v${VERSION}`
 const staticUrlsToCache = [
     '/comments.js',
     '/external-links.js',
@@ -7,7 +7,7 @@ const staticUrlsToCache = [
     '/offline.html',
     '/styles.css',
 ]
-const viewsCacheName = `views-cache-v${VERSION}`
+const viewsCacheName = 'views'
 const cacheWhitelist = [
     staticCacheName,
     viewsCacheName,
