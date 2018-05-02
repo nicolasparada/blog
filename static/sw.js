@@ -34,37 +34,37 @@ function onActivate(ev) {
     ev.waitUntil(cleanOldCache())
 }
 
-async function viewsCacheResponse(ev) {
+async function handleViewRequest(req) {
     try {
-        const res = await fetch(ev.request)
+        const res = await fetch(req)
         const cache = await caches.open(viewsCacheName)
-        cache.put(ev.request, res.clone())
+        cache.put(req, res.clone())
         return res
     } catch (_) {
-        const res = await caches.match(ev.request)
+        const res = await caches.match(req)
         return res
             ? res
             : caches.match('/offline.html')
     }
 }
 
-async function staticCacheResponse(ev) {
-    const res = await caches.match(ev.request)
+async function handleStaticRequest(req) {
+    const res = await caches.match(req)
     return res
         ? res
-        : fetch(ev.request)
+        : fetch(req)
 }
 
 function onFetch(ev) {
     const url = new URL(ev.request.url)
 
     if (ev.request.mode === 'navigate' && url.pathname.endsWith('/')) {
-        ev.respondWith(viewsCacheResponse(ev))
+        ev.respondWith(handleViewRequest(ev.request))
         return
     }
 
     if (ev.request.method === 'GET' && url.origin === location.origin && staticUrlsToCache.includes(url.pathname))
-        ev.respondWith(staticCacheResponse(ev))
+        ev.respondWith(handleStaticRequest(ev.request))
 }
 
 self.addEventListener('install', onInstall)
