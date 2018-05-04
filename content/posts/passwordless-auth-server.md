@@ -240,7 +240,7 @@ func jsonRequired(next http.HandlerFunc) http.HandlerFunc {
 }
 ```
 
-As easy as that. First, it gets the request content type from the headers, then check if it starts with "application/json", otherwise it early return with `415 Unsupported Media Type`.
+As easy as that. First, it gets the request content type from the headers, then checks if it starts with "application/json", otherwise it early return with `415 Unsupported Media Type`.
 
 ### Respond JSON Function
 
@@ -361,7 +361,7 @@ if errPq, ok := err.(*pq.Error); ok && errPq.Code.Name() == "unique_violation" {
 
 This SQL query inserts a new user with the given email and username, and returns the auto generated id. Each `$` will be replaced by the next arguments passed to `QueryRowContext`.
 
-Because the `users` table had unique constraints on the `email` and `username` fields I check for the "unique_violation" error to return with `403 Forbidden` or I return with an internal error.
+Because the `users` table had unique constraints on the `email` and `username` fields, I check for the "unique_violation" error to return with `403 Forbidden` or I return with an internal error.
 
 ```go
 respondJSON(w, user, http.StatusCreated)
@@ -670,7 +670,7 @@ func withAuth(next http.HandlerFunc) http.HandlerFunc {
 }
 ```
 
-The JWT will come in every request inside the "Authorization" header in the form of "Bearer &lt;token_here&gt;". So if no token is present, we just pass to the next middleware.
+The JWT will come in every request inside the "Authorization" header in the form of "Bearer &lt;token_here&gt;". So, if no token is present, we just pass to the next middleware.
 
 We create a parser and parse the token. If fails, we return with `401 Unauthorized`.
 
@@ -737,8 +737,8 @@ I decoupled it because fetching a user by ID is a common thing.
 That's all the code. Build it and test it yourself. You can try a live demo [here](https://go-passwordless-demo.herokuapp.com/).
 
 If you have problems about `Blocked script execution because the document's frame is sandboxed and the 'allow-scripts' permission is not set` after clicking the magic link on mailtrap, try doing a right click + "Open link in new tab". This is a security thing where the mail content is [sandboxed](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox).
-I had this problem sometimes on `localhost`, but I think you should be fine once you deploy the server with `https://`.
+I had this problem sometimes on `localhost`, but I think you should be fine once you deploy the server with `https://` and use a normal SMTP service.
 
 Please leave any issues on the [GitHub repo](https://github.com/nicolasparada/go-passwordless-demo), PRs are welcome too 👍
 
-~~I'll write a second part for this post coding a client for the API.~~ Read how to code a JavaScript client for this API [here](/posts/passwordless-auth-client/).
+I~~'ll write~~ wrote a second part for this post coding a JavaScript client for the API [here](/posts/passwordless-auth-client/).
