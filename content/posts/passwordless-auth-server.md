@@ -160,7 +160,7 @@ func main() {
     router.HandleFunc("POST", "/api/users", jsonRequired(createUser))
     router.HandleFunc("POST", "/api/passwordless/start", jsonRequired(passwordlessStart))
     router.HandleFunc("GET", "/api/passwordless/verify_redirect", passwordlessVerifyRedirect)
-    router.Handle("GET", "/api/auth_user", authRequired(getAuthUser))
+    router.Handle("GET", "/api/auth_user", guard(getAuthUser))
 
     addr := fmt.Sprintf(":%d", config.port)
     log.Printf("starting server at %s 🚀\n", config.appURL)
@@ -205,7 +205,7 @@ func jsonRequired(next http.HandlerFunc) http.HandlerFunc {
     }
 }
 
-func authRequired(next http.HandlerFunc) http.HandlerFunc {
+func guard(next http.HandlerFunc) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         next(w, r)
     }
@@ -622,11 +622,11 @@ Finally, we just redirect with a `302 Found`.
 
 ---
 
-The passwordless flow is completed. Now we just need to code the `getAuthUser` endpoint which is to get info about the current authenticated user. If you remember, this endpoint makes use of `authRequired` middleware.
+The passwordless flow is completed. Now we just need to code the `getAuthUser` endpoint which is to get info about the current authenticated user. If you remember, this endpoint makes use of `guard` middleware.
 
 ### With Auth Middleware
 
-Before coding the `authRequired` middleware, I'll code one that doesn't require authentication. I mean, if no JWT is passed, it just continues without authenticating the user.
+Before coding the `guard` middleware, I'll code one that doesn't require authentication. I mean, if no JWT is passed, it just continues without authenticating the user.
 
 ```go
 type ContextKey int
@@ -676,10 +676,10 @@ We create a parser and parse the token. If fails, we return with `401 Unauthoriz
 
 Then we extract the claims inside the JWT and add the `Subject` (which is the user ID) to the request context.
 
-### Auth Required Middleware
+### Guard Middleware
 
 ```go
-func authRequired(next http.HandlerFunc) http.HandlerFunc {
+func guard(next http.HandlerFunc) http.HandlerFunc {
     return withAuth(func(w http.ResponseWriter, r *http.Request) {
         _, ok := r.Context().Value(keyAuthUserID).(string)
         if !ok {
@@ -691,7 +691,7 @@ func authRequired(next http.HandlerFunc) http.HandlerFunc {
 }
 ```
 
-Now, `authRequired` will make use of `withAuth` and will try to extract the authenticated user ID from the request context. If it fails, it returns with `401 Unauthorized` otherwise continues.
+Now, `guard` will make use of `withAuth` and will try to extract the authenticated user ID from the request context. If it fails, it returns with `401 Unauthorized` otherwise continues.
 
 ### Get Auth User
 
