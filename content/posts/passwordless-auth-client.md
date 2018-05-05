@@ -123,8 +123,7 @@ export function getAuthUser() {
 }
 
 export function isAuthenticated() {
-    return typeof localStorage.getItem('jwt') === 'string'
-        && getAuthUser() !== null
+    return localStorage.getItem('jwt') !== null && getAuthUser() !== null
 }
 ```
 
