@@ -232,11 +232,10 @@ function onAccessFormSubmit(ev) {
 }
 
 function sendMagicLink(email) {
-    const body = {
+    return http.post('/api/passwordless/start', {
         email,
         redirectUri: location.origin + '/callback',
-    }
-    return http.post('/api/passwordless/start', body).then(() => {
+    }).then(() => {
         alert('Magic link sent. Go check your email inbox.')
     })
 }
