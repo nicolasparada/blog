@@ -163,7 +163,7 @@ function getAuthHeader() {
 }
 
 export async function handleResponse(res) {
-    const body = await getBody(res)
+    const body = await res.clone().json().catch(() => res.text())
     const response = {
         url: res.url,
         statusCode: res.status,
@@ -176,23 +176,13 @@ export async function handleResponse(res) {
     return response
 }
 
-async function getBody(res) {
-    const text = await res.text()
-    try {
-        return JSON.parse(text)
-    } catch (_) {
-        return text
-    }
-}
-
-
 export default {
     get,
     post,
 }
 ```
 
-This module exports `get()` and `post()` functions. They are wrappers around the `fetch` API. Both functions inject an `Authorization: Bearer <token_here>` header to the request when the user is authenticated. That way the server can authenticate us.
+This module exports `get()` and `post()` functions. They are wrappers around the `fetch` API. Both functions inject an `Authorization: Bearer <token_here>` header to the request when the user is authenticated; that way the server can authenticate us.
 
 ## Welcome Page
 
