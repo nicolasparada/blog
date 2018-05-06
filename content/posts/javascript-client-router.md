@@ -123,21 +123,15 @@ router.handle(/^\/users\/([^\/]+)$/, userPageHandler)
 router.handle(/^\//, notFoundPageHandler)
 
 function homePageHandler() {
-    const h1 = document.createElement('h1')
-    h1.textContent = 'Home Page'
-    return h1
+    return document.createTextNode('Home Page')
 }
 
 function userPageHandler(username) {
-    const h1 = document.createElement('h1')
-    h1.textContent = `${username}'s Page`
-    return h1
+    return document.createTextNode(`${username}'s Page`)
 }
 
 function notFoundPageHandler() {
-    const h1 = document.createElement('h1')
-    h1.textContent = 'Not Found Page'
-    return h1
+    return document.createTextNode('Not Found Page')
 }
 
 const pageOutlet = document.getElementById('page-outlet')
@@ -145,7 +139,7 @@ const page = router.exec(decodeURI(location.pathname))
 pageOutlet.appendChild(page)
 ```
 
-Now the handlers... instead of returning some message text, they return actual DOM; in this case, they all return a `HTMLHeadingElement` (`<h1>`), but you can return any instance of `Node` like a `DocumentFragment` or a `HTMLTemplateElement` content.
+Now the handlers... instead of returning some string, they return actual DOM; in this case, they all return a `Text`, but you can return any instance of `Node` like `DocumentFragment` or `HTMLTemplateElement` content.
 
 Below, we call `router.exec()` passing `location.pathname` and append the result to the page outlet div.
 
@@ -334,13 +328,17 @@ async function render() {
 Using the event system that comes with the DOM, we can dispatch to the current page an event. A custom "disconnect" event.
 
 ```js
+const template = document.createElement('template')
+template.innerHTML = `
+    <h1>Home Page</h1>
+`
+
 export default function homePageHandler() {
-    const h1 = document.createElement('h1')
-    h1.textContent = 'Home Page'
-    h1.addEventListener('disconnect', () => {
+    const page = template.content.cloneNode(true)
+    page.addEventListener('disconnect', () => {
         console.log('Leaving home page')
     })
-    return h1
+    return page
 }
 ```
 
