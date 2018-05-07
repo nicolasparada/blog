@@ -2,13 +2,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{- if .IsPage }}{{ .Title }}{{ else }}{{ .Site.Title }}{{ end -}}</title>
-    {{- if .IsPage }}
-    <meta name="description" content="{{ .Description }}">
-    {{ end -}}
+    <meta name="description" content="{{- if .IsPage }}{{ .Description }}{{ else }}Nicolás Parada's Blog{{ end -}}">
     <meta name="author" content="Nicolás Parada">
     {{- if .IsPage }}
     <meta name="keywords" content="{{ range $index, $tag := .Params.tags }}{{ $tag }},{{ end }}">
     {{ end -}}
+    <meta name="theme-color" content="#000">
     <link rel="manifest" href="/manifest.json">
     <link rel="shortcut icon" href="data:,">
     <link href="https://fonts.googleapis.com/css?family=Fira+Mono|PT+Sans:400,400i,700,700i|PT+Serif" rel="stylesheet">

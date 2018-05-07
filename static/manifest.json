@@ -1,6 +1,6 @@
 {
-    "name": "Nicolás Parada's Blog",
-    "short_name": "Nicolás Parada",
+    "name": "Nicolás Parada",
+    "short_name": "NP",
     "start_url": "/?utm_source=homescreen",
     "display": "standalone",
     "orientation": "portrait",
