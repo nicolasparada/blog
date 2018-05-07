@@ -150,7 +150,7 @@ pre code {
 
 .post-date {
     color: var(--muted);
-    font-size: 85%;
+    font-size: .8125rem;
 }
 
 .post-actions {
