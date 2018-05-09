@@ -33,18 +33,14 @@ function onActivate(ev) {
     ev.waitUntil(cleanOldCache())
 }
 
-async function handleViewRequest(req) {
-    try {
-        const res = await fetch(req)
-        const cache = await caches.open(viewsCacheName)
+async function staleWhileRevalidate(req, cacheName) {
+    const cache = await caches.open(cacheName)
+    const res = cache.match(req)
+    const network = fetch(req).then(res => {
         cache.put(req, res.clone())
         return res
-    } catch (_) {
-        const res = await caches.match(req)
-        return res
-            ? res
-            : caches.match('/offline.html')
-    }
+    }).catch(() => caches.match('/offline.html'))
+    return res || network
 }
 
 async function handleStaticRequest(req) {
@@ -58,7 +54,7 @@ function onFetch(ev) {
     const url = new URL(ev.request.url)
 
     if (ev.request.mode === 'navigate' && url.pathname.endsWith('/')) {
-        ev.respondWith(handleViewRequest(ev.request))
+        ev.respondWith(staleWhileRevalidate(ev.request, viewsCacheName))
         return
     }
 
