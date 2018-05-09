@@ -35,7 +35,7 @@ function onActivate(ev) {
 
 async function staleWhileRevalidate(req, cacheName) {
     const cache = await caches.open(cacheName)
-    const res = cache.match(req)
+    const res = await cache.match(req)
     const network = fetch(req).then(res => {
         cache.put(req, res.clone())
         return res
