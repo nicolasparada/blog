@@ -170,8 +170,10 @@ export async function handleResponse(res) {
         headers: res.headers,
         body,
     }
-    if (!res.ok)
-        throw Object.assign(new Error(res.statusText), response)
+    if (!res.ok) throw Object.assign(
+        new Error(body.message || body || res.statusText),
+        response
+    )
     return response
 }
 
