@@ -161,11 +161,13 @@ static delegateClicks(ev) {
         || ev.ctrlKey
         || ev.metaKey
         || ev.shiftKey
-        || ev.button !== 0) return
+        || ev.button !== 0)
+        return
 
-    const a = Array
-        .from(walkParents(ev.target))
-        .find(n => n instanceof HTMLAnchorElement)
+    let a
+    for (a = ev.target; a instanceof Node; a = a.parentNode)
+        if (a instanceof HTMLAnchorElement)
+            break
 
     if (!(a instanceof HTMLAnchorElement)
         || (a.target !== '' && a.target !== '_self')
@@ -178,7 +180,8 @@ static delegateClicks(ev) {
 ```
 
 First, it returns early if the click wasn't a normal left click.
-Using `walkParents` function, we filter until finding an anchor element. We early return also if the link uses a special target ("_blank" for example) or if the link goes outside our site. If all that passes, we prevent the default and update the browser history with the link `href`.
+We walk over the event target parents until finding an anchor element. We early return also if the link uses a special target ("_blank" for example) or if the link goes outside our site.
+If all that passes, we prevent the default and update the browser history with the link `href`.
 
 ```js
 static updateHistory(href, redirect = false) {
@@ -189,16 +192,6 @@ static updateHistory(href, redirect = false) {
 ```
 
 `updateHistory` is also a static method of the Router. This function updates the history of the browser, but also dispatches a "popstate" event. So, if you want to trigger a page render outside of link navigation, you can use this method.
-
-```js
-function* walkParents(node) {
-    do {
-        yield node
-    } while ((node = node.parentNode) instanceof Node)
-}
-```
-
-`walkParents` is a generator that yields with the node parents.
 
 Now, back to the `main.js` file we'll move that previous render we did in the page outlet div to a function.
 
