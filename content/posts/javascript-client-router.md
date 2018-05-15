@@ -164,12 +164,9 @@ static delegateClicks(ev) {
         || ev.button !== 0)
         return
 
-    let a
-    for (a = ev.target; a instanceof Node; a = a.parentNode)
-        if (a instanceof HTMLAnchorElement)
-            break
+    const a = ev.target.closest('a')
 
-    if (!(a instanceof HTMLAnchorElement)
+    if (a === null
         || (a.target !== '' && a.target !== '_self')
         || a.hostname !== location.hostname)
         return
@@ -180,7 +177,7 @@ static delegateClicks(ev) {
 ```
 
 First, it returns early if the click wasn't a normal left click.
-We walk over the event target parents until finding an anchor element. We early return also if the link uses a special target ("_blank" for example) or if the link goes outside our site.
+Then we find the closest anchor element on the click event target. We early return also if the link uses a special target ("_blank" for example) or if the link goes outside our site.
 If all that passes, we prevent the default and update the browser history with the link `href`.
 
 ```js
