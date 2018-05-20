@@ -1,5 +1,5 @@
 ---
-title: "JavaScript Client Router"
+title: "JavaScript Router"
 description: "Coding a router for building single page applications with JavaScript"
 tags: ["javascript"]
 date: 2018-04-25T22:21:12-03:00
@@ -8,15 +8,12 @@ draft: false
 ---
 
 There are a lot of frameworks/libraries to build single page applications, but I wanted something more minimal.
-I've come with a solution and I just wanted to share it.
+I've come with a solution and I just wanted to share it 🙂
 
 ```js
 class Router {
     constructor() {
         this.routes = []
-
-        this.handle = this.handle.bind(this)
-        this.exec = this.exec.bind(this)
     }
 
     handle(pattern, handler) {
@@ -26,12 +23,16 @@ class Router {
     exec(pathname) {
         for (const route of this.routes) {
             if (typeof route.pattern === 'string') {
-                if (route.pattern !== pathname) continue
-                return route.handler()
+                if (route.pattern === pathname) {
+                    return route.handler()
+                }
+            } else if (route.pattern instanceof RegExp) {
+                const result = pathname.match(route.pattern)
+                if (result !== null) {
+                    const params = result.slice(1)
+                    return route.handler(...params)
+                }
             }
-            const match = route.pattern.exec(pathname)
-            if (match === null) continue
-            return route.handler(...match.slice(1))
         }
     }
 }
@@ -40,19 +41,19 @@ class Router {
 ```js
 const router = new Router()
 
-router.handle('/', homePageHandler)
-router.handle(/^\/users\/([^\/]+)$/, userPageHandler)
-router.handle(/^\//, notFoundPageHandler)
+router.handle('/', homePage)
+router.handle(/^\/users\/([^\/]+)$/, userPage)
+router.handle(/^\//, notFoundPage)
 
-function homePageHandler() {
+function homePage() {
     return 'home page'
 }
 
-function userPageHandler(username) {
+function userPage(username) {
     return `${username}'s page`
 }
 
-function notFoundPageHandler() {
+function notFoundPage() {
     return 'not found page'
 }
 
@@ -61,13 +62,13 @@ console.log(router.exec('/users/john')) // john's page
 console.log(router.exec('/foo')) // not found page
 ```
 
-To use it you add handlers for a URL pattern. This pattern can be a simple string or a regular expression. Using a string will match exactly that, but using a regular expression allows you to do fancy things like extract parameters from the URL as seen on `userPageHandler` or match any URL as seen on `notFoundPageHandler`.
+To use it you add handlers for a URL pattern. This pattern can be a simple string or a regular expression. Using a string will match exactly that, but a regular expression allows you to do fancy things like capture parts from the URL as seen with the user page or match any URL as seen with the not found page.
 
-I'll explain what does that `exec` method... As I said, the URL pattern can be a string or a regular expression, so it first checks for a string. In case the pattern is equal to the given pathname, it returns the execution of the handler. If it is not a string, then it's a regular expression, so it uses the `.exec()` method of the regexp against the given pathname. In case it matches, it returns the execution of the handler passing to it the parameters with `match.slice(1)`.
+I'll explain what does that `exec` method... As I said, the URL pattern can be a string or a regular expression, so it first checks for a string. In case the pattern is equal to the given pathname, it returns the execution of the handler. If it is a regular expression, we do a match with the given pathname. In case it matches, it returns the execution of the handler passing to it the captured parameters.
 
-## Working example
+## Working Example
 
-That example, just logs to the console. Let's try to integrate it to a page and see something.
+That example just logs to the console. Let's try to integrate it to a page and see something.
 
 ```html
 <!DOCTYPE html>
@@ -75,7 +76,7 @@ That example, just logs to the console. Let's try to integrate it to a page and 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript Client Router Demo</title>
+    <title>Router Demo</title>
     <link rel="shortcut icon" href="data:,">
     <script src="/main.js" type="module"></script>
 </head>
@@ -86,7 +87,7 @@ That example, just logs to the console. Let's try to integrate it to a page and 
         <a href="/bar">Foo</a>
         <a href="/qux">Baz</a>
     </nav>
-    <div id="page-outlet"></div>
+    <main></main>
 </body>
 </html>
 ```
@@ -101,122 +102,87 @@ npm i -g serve
 serve -s
 ```
 
-That HTML file loads the script `main.js` as a module. It has a `<nav>` and a  `<div id=page-outlet>` in which we'll render the corresponding page.
-
-I moved the previous `Router` class to a `router.js` file.
-
-```js
-export default class Router {
-    // ...
-}
-```
+That HTML file loads the script `main.js` as a module. It has a simple `<nav>` and a  `<main>` element in which we'll render the corresponding page.
 
 Inside the `main.js` file:
 
 ```js
-import Router from './router.js'
-
-const router = new Router()
-
-router.handle('/', homePageHandler)
-router.handle(/^\/users\/([^\/]+)$/, userPageHandler)
-router.handle(/^\//, notFoundPageHandler)
-
-function homePageHandler() {
-    return document.createTextNode('Home Page')
-}
-
-function userPageHandler(username) {
-    return document.createTextNode(`${username}'s Page`)
-}
-
-function notFoundPageHandler() {
-    return document.createTextNode('Not Found Page')
-}
-
-const pageOutlet = document.getElementById('page-outlet')
-const page = router.exec(decodeURI(location.pathname))
-pageOutlet.appendChild(page)
+const main = document.querySelector('main')
+const result = router.exec(decodeURI(location.pathname))
+main.innerHTML = result
 ```
 
-Now the handlers... instead of returning some string, they return actual DOM; in this case, they all return a `Text`, but you can return any instance of `Node` like `DocumentFragment` or `HTMLTemplateElement` content.
-
-Below, we call `router.exec()` passing `location.pathname` and append the result to the page outlet div.
+We call `router.exec()` passing the current pathname and setting the result as HTML in the main element.
 
 *We decode `location.pathname` to not get weird symbols in the params.*
 
-If you go to localhost and play with it. You'll see that it works, but not as you expect from an SPA. Single page applications shouldn't refresh when you click on links.
+If you go to localhost and play with it you'll see that it works, but not as you expect from a SPA. Single page applications shouldn't refresh when you click on links.
 
-We'll have to attach click event listeners to each anchor tag, prevent the default behavior and do the correct rendering.
+We'll have to attach event listeners to each anchor link click, prevent the default behavior and do the correct rendering.
 Because a single page application is something dynamic, you expect creating anchor links on the fly so to add the event listeners I'll use a technique called [event delegation](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_delegation).
 
-I'll add a click event listener globally and check if that click was on an anchor link or inside one and walk up the parents until finding it.
+I'll attach a click event listener to the whole `body` and check if that click was on an anchor link (or inside one).
 
-In the `Router` class I'll add a static method:
+In the `Router` class I'll have a method that will register a callback that will run for every time we click on a link or a "popstate" event occurs.
+The popstate event is dispatched every time you use the browser back or forward buttons.
+
+To the callback we'll pass that same `router.exec(decodeURI(location.pathname))` for convenience.
 
 ```js
-static delegateClicks(ev) {
-    if (ev.defaultPrevented
-        || ev.button !== 0
-        || ev.ctrlKey
-        || ev.shiftKey
-        || ev.altKey
-        || ev.metaKey)
-        return
+install(callback) {
+    const execCallback = () => {
+        callback(this.exec(decodeURI(location.pathname)))
+    }
 
-    const a = ev.target.closest('a')
+    document.addEventListener('click', ev => {
+        if (ev.defaultPrevented
+            || ev.button !== 0
+            || ev.ctrlKey
+            || ev.shiftKey
+            || ev.altKey
+            || ev.metaKey) {
+            return
+        }
 
-    if (a === null
-        || (a.target !== '' && a.target !== '_self')
-        || a.hostname !== location.hostname)
-        return
+        const a = ev.target.closest('a')
 
-    ev.preventDefault()
-    Router.updateHistory(a.href)
+        if (a === null
+            || (a.target !== '' && a.target !== '_self')
+            || a.hostname !== location.hostname) {
+            return
+        }
+
+        ev.preventDefault()
+
+        if (a.href !== location.href) {
+            history.pushState(history.state, document.title, a.href)
+            execCallback()
+        }
+    })
+
+    addEventListener('popstate', execCallback)
+
+    execCallback()
 }
 ```
 
-First, it returns early if the click wasn't a normal left click.
-Then we find the closest anchor element on the click event target. We early return also if the link uses a special target ("_blank" for example) or if the link goes outside our site.
-If all that passes, we prevent the default and update the browser history with the link `href`.
+For link clicks, besides calling the callback, we update the URL with `history.pushState()`.
+
+We'll move that previous render we did in the main element into the install callback.
 
 ```js
-static updateHistory(href, redirect = false) {
-    const { state } = history
-    history[redirect ? 'replaceState' : 'pushState'](state, document.title, href)
-    dispatchEvent(new PopStateEvent('popstate', { state }))
-}
+router.install(result => {
+    main.innerHTML = result
+})
 ```
-
-`updateHistory` is also a static method of the Router. This function updates the history of the browser, but also dispatches a "popstate" event. So, if you want to trigger a page render outside of link navigation, you can use this method.
-
-Now, back to the `main.js` file we'll move that previous render we did in the page outlet div to a function.
-
-```js
-const pageOutlet = document.getElementById('page-outlet')
-let currentPage
-function render() {
-    if (currentPage instanceof Node)
-        pageOutlet.innerHTML = ''
-    currentPage = router.exec(decodeURI(location.pathname))
-    pageOutlet.appendChild(currentPage)
-}
-render()
-
-addEventListener('click', Router.delegateClicks)
-addEventListener('popstate', render)
-```
-
-So, first we delegate the clicks; every click on a link will dispatch a "popstate" event and on every "popstate" event we do a render.
-I used popstate because it's an event that occurs also when you use the back/forward browser arrows.
 
 ## Code-Splitting
 
-Going further beyond with the new dynamic `import()` 🔥 we can have code-splitting so easy.
-For example, let's move the `userPageHandler` to a file `pages/user-page.js`:
+With the new dynamic `import()` 🔥 we can have code-splitting so easy.
+For example, let's move the user page to a file `pages/user-page.js`:
 
 ```js
-export default function userPageHandler(username) {
+export default function userPage(username) {
     // ...
 }
 ```
@@ -226,117 +192,71 @@ Now, in the router handler we can import it:
 ```js
 router.handle(/^\/users\/([^\/]+)$/, username => {
     return import('./pages/user-page.js')
-        .then(m => m.default)
-        .then(h => h(username))
+        .then(m => m.default(username))
 })
 ```
 
-But you'll have to update the `render` function to handle the promise `import()` returns.
+But you'll have to update the rendering to handle the promise `import()` returns.
 
 ```js
-async function render() {
-    // ...
-    currentPage = await router.exec(decodeURI(location.pathname))
-    // ...
-}
+router.install(async resultPromise => {
+    main.innerHTML = ''
+    main.innerHTML = await resultPromise
+})
 ```
 
 Dynamic import is so cool, but you must know it doesn't have good support yet. It's a stage 3 proposal; only Chrome and Safari by the moment. The good news is, it's [polyfillable](https://gist.github.com/tbranyen/9496397c3f422ebadc382e7daffc1dc6).
 
 ## Loading Indicator
 
-Now that we have code-splitting, pages won't load instantly, so add a "loading" message to the HTML code:
+Now that we have code-splitting, pages won't load instantly. With a little of CSS and the `:empty` selector you can show a loading indicator.
 
-```html
-<div id="page-outlet">
-    Loading...
-</div>
-```
+```css
+main:empty {
+    text-align: center;
+}
 
-Now, before starting to load the page, we'll show this message and after the page has loaded, we'll clear it.
-
-```js
-const loadingHTML = pageOutlet.innerHTML
-
-function render() {
-    if (currentPage instanceof Node)
-        pageOutlet.innerHTML = loadingHTML
-    currentPage = await router.exec(decodeURI(location.pathname))
-    pageOutlet.innerHTML = ''
-    pageOutlet.appendChild(currentPage)
+main:empty::after {
+    content: 'Loading... please wait.';
 }
 ```
 
-## Caching
+### DOM
 
-Of course, you can go as far as you want, but I've found very useful caching the page handlers when using dynamic import.
-
-```js
-const modulesCache = new Map()
-async function importWithCache(specifier) {
-    if (modulesCache.has(specifier))
-        return modulesCache.get(specifier)
-    const m = await import(specifier)
-    modulesCache.set(specifier, m)
-    return m
-}
-```
-
-This function uses a `Map` to save in memory modules once you import them. Now we can do a wrapper over it to import the page handlers.
-
-```js
-function view(name) {
-    return (...args) => importWithCache(`/pages/${name}-page.js`)
-        .then(m => m.default)
-        .then(h => h(...args))
-}
-```
-
-```js
-router.handle('/', view('home'))
-router.handle(/^\/users\/([^\/]+)$/, view('user'))
-router.handle(/^\//, view('not-found'))
-```
-
-## Disconnect
-
-Last but not least is a way to inform the pages that the user is leaving them.
-
-In the `render` function:
-
-```js
-const disconnectEvent = new CustomEvent('disconnect')
-async function render() {
-    if (currentPage instanceof Node) {
-        currentPage.dispatchEvent(disconnectEvent)
-        // ...
-    }
-    // ...
-}
-```
-
-Using the event system that comes with the DOM, we can dispatch to the current page an event. A custom "disconnect" event.
+Those handlers you pass to the router doesn't need to return a `string`. If you need more power you can return actual DOM. For example, in the home page:
 
 ```js
 const template = document.createElement('template')
 template.innerHTML = `
-    <h1>Home Page</h1>
+    <div class="container">
+        <h1>Home Page</h1>
+    </div>
 `
 
-export default function homePageHandler() {
+export default function homePage() {
     const page = template.content.cloneNode(true)
-    page.addEventListener('disconnect', () => {
-        console.log('Leaving home page')
-    })
+    // You can do `page.querySelector()` here...
     return page
 }
 ```
 
-And you can attach a listener if you want to know when the user leaves.
+And now in the install callback you can check if the result is a `string` or a `Node`.
+
+```js
+router.install(async resultPromise => {
+    main.innerHTML = ''
+    const result = await resultPromise
+    if (typeof result === 'string') {
+        main.innerHTML = result
+    } else if (result instanceof Node) {
+        main.appendChild(result)
+    }
+})
+```
 
 ---
 
-I wanted to share this because I'll use this router for JavaScript clients I will demo in this blog.
-Continuing with the [post of the past week](/posts/passwordless-auth-server/), I'll code a client using this 👨‍💻
+That will cover the basic features. I wanted to share this because I'll use this router in next blog posts.
 
-You can see a working demo [here](https://javascript-client-router-demo.netlify.com/) and the source code [here](https://github.com/nicolasparada/javascript-client-router-demo).
+ - [Demo](https://javascript-client-router-demo.netlify.com/).
+ - [Source code](https://github.com/nicolasparada/javascript-client-router-demo).
