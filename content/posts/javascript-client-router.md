@@ -259,5 +259,6 @@ router.install(async resultPromise => {
 That will cover the basic features. I wanted to share this because I'll use this router in next blog posts.
 
 I've published it as an [npm package](https://www.npmjs.com/package/@nicolasparada/router).
+
  - [Source code](https://github.com/nicolasparada/js-router).
  - [Demo](https://js-router.netlify.com/).
