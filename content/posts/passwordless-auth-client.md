@@ -47,20 +47,19 @@ Let's see that `static/index.html`.
 
 Single page application left all the rendering to JavaScript, so we have an empty body and a `main.js` file.
 
-I'll copy `Router` and `importWithCache()` from the [last post](/posts/javascript-client-router/) inside `static/js`.
+I'll user the Router from the [last post](/posts/javascript-client-router/).
 
 ## Rendering
 
 Now, create a `static/js/main.js` file with the following content:
 
 ```js
+import Router from 'https://unpkg.com/@nicolasparada/router'
 import { isAuthenticated } from './auth.js'
-import { importWithCache } from './dynamic-import.js' // From the last post
-import Router from './router.js' // From the last post
 
 const router = new Router()
 
-router.handle('/', guard(view('home'), view('welcome')))
+router.handle('/', guard(view('home')))
 router.handle('/callback', view('callback'))
 router.handle(/^\//, view('not-found'))
 
@@ -70,12 +69,11 @@ router.install(async resultPromise => {
 })
 
 function view(name) {
-    return (...args) => importWithCache(`/js/pages/${name}-page.js`)
-        .then(m => m.default)
-        .then(h => h(...args))
+    return (...args) => import(`/js/pages/${name}-page.js`)
+        .then(m => m.default(...args))
 }
 
-function guard(fn1, fn2) {
+function guard(fn1, fn2 = view('welcome')) {
     return (...args) => isAuthenticated()
         ? fn1(...args)
         : fn2(...args)
