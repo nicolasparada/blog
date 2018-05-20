@@ -81,12 +81,11 @@ That example just logs to the console. Let's try to integrate it to a page and s
     <script src="/main.js" type="module"></script>
 </head>
 <body>
-    <nav>
+    <header>
         <a href="/">Home</a>
         <a href="/users/john_doe">Profile</a>
-        <a href="/bar">Foo</a>
-        <a href="/qux">Baz</a>
-    </nav>
+        <a href="/unknown">Unknown</a>
+    </header>
     <main></main>
 </body>
 </html>
@@ -102,7 +101,7 @@ npm i -g serve
 serve -s
 ```
 
-That HTML file loads the script `main.js` as a module. It has a simple `<nav>` and a  `<main>` element in which we'll render the corresponding page.
+That HTML file loads the script `main.js` as a module. It has a simple `<header>` and a  `<main>` element in which we'll render the corresponding page.
 
 Inside the `main.js` file:
 
