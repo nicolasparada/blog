@@ -29,7 +29,7 @@ class Router {
             } else if (route.pattern instanceof RegExp) {
                 const result = pathname.match(route.pattern)
                 if (result !== null) {
-                    const params = result.slice(1)
+                    const params = result.slice(1).map(decodeURIComponent)
                     return route.handler(...params)
                 }
             }
@@ -108,13 +108,11 @@ Inside the `main.js` file:
 
 ```js
 const main = document.querySelector('main')
-const result = router.exec(decodeURI(location.pathname))
+const result = router.exec(location.pathname)
 main.innerHTML = result
 ```
 
 We call `router.exec()` passing the current pathname and setting the result as HTML in the main element.
-
-*We decode `location.pathname` to not get weird symbols in the params.*
 
 If you go to localhost and play with it you'll see that it works, but not as you expect from a SPA. Single page applications shouldn't refresh when you click on links.
 
@@ -126,12 +124,12 @@ I'll attach a click event listener to the whole `body` and check if that click w
 In the `Router` class I'll have a method that will register a callback that will run for every time we click on a link or a "popstate" event occurs.
 The popstate event is dispatched every time you use the browser back or forward buttons.
 
-To the callback we'll pass that same `router.exec(decodeURI(location.pathname))` for convenience.
+To the callback we'll pass that same `router.exec(location.pathname)` for convenience.
 
 ```js
 install(callback) {
     const execCallback = () => {
-        callback(this.exec(decodeURI(location.pathname)))
+        callback(this.exec(location.pathname))
     }
 
     document.addEventListener('click', ev => {
