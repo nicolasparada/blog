@@ -41,9 +41,7 @@ Let's see that `static/index.html`.
     <link rel="shortcut icon" href="data:,">
     <script src="/js/main.js" type="module"></script>
 </head>
-<body>
-    Loading...
-</body>
+<body></body>
 </html>
 ```
 
@@ -60,6 +58,17 @@ import { isAuthenticated } from './auth.js'
 import { importWithCache } from './dynamic-import.js' // From the last post
 import Router from './router.js' // From the last post
 
+const router = new Router()
+
+router.handle('/', guard(view('home'), view('welcome')))
+router.handle('/callback', view('callback'))
+router.handle(/^\//, view('not-found'))
+
+router.install(async resultPromise => {
+    document.body.innerHTML = ''
+    document.body.appendChild(await resultPromise)
+})
+
 function view(name) {
     return (...args) => importWithCache(`/js/pages/${name}-page.js`)
         .then(m => m.default)
@@ -71,31 +80,6 @@ function guard(fn1, fn2) {
         ? fn1(...args)
         : fn2(...args)
 }
-
-const router = new Router()
-
-router.handle('/', guard(view('home'), view('welcome')))
-router.handle('/callback', view('callback'))
-router.handle(/^\//, view('not-found'))
-
-const disconnectEvent = new CustomEvent('disconnect')
-const pageOutlet = document.body
-const loadingHTML = pageOutlet.innerHTML
-let currentPage
-
-async function render() {
-    if (currentPage instanceof Node) {
-        pageOutlet.innerHTML = loadingHTML
-        currentPage.dispatchEvent(disconnectEvent)
-    }
-    currentPage = await router.exec(decodeURI(location.pathname))
-    pageOutlet.innerHTML = ''
-    pageOutlet.appendChild(currentPage)
-}
-
-render()
-addEventListener('click', Router.delegateClicks)
-addEventListener('popstate', render)
 ```
 
 Differing from the last post, we implement an `isAuthenticated()` function and a `guard()` function that uses it to render one or another page. So when a user visits `/` it will show the home or welcome page whether the user is authenticated or not.
@@ -134,7 +118,7 @@ When someone login, we save the JSON web token, expiration date of it and the cu
 
 ## Fetch
 
-Before continuing with the page handlers, I'll code some HTTP utilities to work with the server API.
+Before continuing with the pages, I'll code some HTTP utilities to work with the server API.
 
 Let's create a `static/js/http.js` file with the following content:
 
@@ -196,13 +180,14 @@ template.innerHTML = `
 <h1>Passwordless Demo</h1>
 <h2>Access</h2>
 <form id="access-form">
-    <input type="email" name="email" placeholder="Email" required>
+    <input type="email" placeholder="Email" required>
     <button type="submit">Send Magic Link</button>
 </form>
 `
 
-export default function welcomePageHandler() {
+export default function welcomePage() {
     const page = template.content.cloneNode(true)
+
     page.getElementById('access-form')
         .addEventListener('submit', onAccessFormSubmit)
 
@@ -223,13 +208,14 @@ function onAccessFormSubmit(ev) {
     ev.preventDefault()
 
     const form = ev.currentTarget
-    const input = form.email
+    const input = form.querySelector('input')
     const email = input.value
 
     sendMagicLink(email).catch(err => {
         console.error(err)
-        if (err.statusCode === 404 && wantToCreateAccount())
+        if (err.statusCode === 404 && wantToCreateAccount()) {
             runCreateUserProgram(email)
+        }
     })
 }
 
@@ -273,10 +259,10 @@ import http from '../http.js'
 
 const template = document.createElement('template')
 template.innerHTML = `
-<h1>Authenticating you...</h1>
+<h1>Authenticating you 👀</h1>
 `
 
-export default function callbackPageHandler() {
+export default function callbackPage() {
     const page = template.content.cloneNode(true)
 
     const hash = decodeURIComponent(location.hash.substr(1))
@@ -301,7 +287,7 @@ export default function callbackPageHandler() {
 
 To remember... when clicking the magic link, we go to `/api/passwordless/verify_redirect` which redirect us to the redirect URI we pass (`/callback`) with the JWT and expiration date in the URL hash.
 
-The callback page handler decodes the hash from the URL to extract those parameters to do a `GET` request to `/api/auth_user` with the JWT saving all the data to `localStorage`. Finally, it just redirects to home.
+The callback page decodes the hash from the URL to extract those parameters to do a `GET` request to `/api/auth_user` with the JWT saving all the data to `localStorage`. Finally, it just redirects to home.
 
 ## Home Page
 
@@ -310,13 +296,12 @@ Create a `static/pages/home-page.js` file with the following content:
 ```js
 import { getAuthUser } from '../auth.js'
 
-export default function homePageHandler() {
+export default function homePage() {
     const authUser = getAuthUser()
 
     const template = document.createElement('template')
     template.innerHTML = `
     <h1>Passwordless Demo</h1>
-
     <p>Welcome back, ${authUser.username} 👋</p>
     <button id="logout-button">Logout</button>
     `
@@ -339,7 +324,7 @@ This page greets the authenticated user and also has a logout button. The `logou
 
 ---
 
-There is it. I bet you already saw the demo before... [Here](https://go-passwordless-demo.herokuapp.com/) you have it.
-Also, the source code is in the same repo [here](https://github.com/nicolasparada/go-passwordless-demo).
+There is it. I bet you already saw the [demo](https://go-passwordless-demo.herokuapp.com/) before.
+Also, the source code is in the same [repository](https://github.com/nicolasparada/go-passwordless-demo).
 
 👋👋👋
