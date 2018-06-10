@@ -265,7 +265,7 @@ export default function callbackPage() {
 
     const hash = location.hash.substr(1)
     const fragment = new URLSearchParams(hash)
-    for (const [k, v] of f.entries()) {
+    for (const [k, v] of fragment.entries()) {
         fragment.set(decodeURIComponent(k), decodeURIComponent(v))
     }
     const jwt = fragment.get('jwt')
