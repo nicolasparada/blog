@@ -266,7 +266,7 @@ export default function callbackPage() {
     const hash = location.hash.substr(1)
     const fragment = new URLSearchParams(hash)
     for (const [k, v] of f.entries()) {
-        f.set(decodeURIComponent(k), decodeURIComponent(v))
+        fragment.set(decodeURIComponent(k), decodeURIComponent(v))
     }
     const jwt = fragment.get('jwt')
     const expiresAt = fragment.get('expires_at')
