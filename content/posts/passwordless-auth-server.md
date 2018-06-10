@@ -629,15 +629,11 @@ The passwordless flow is completed. Now we just need to code the `getAuthUser` e
 Before coding the `guard` middleware, I'll code one that doesn't require authentication. I mean, if no JWT is passed, it just continues without authenticating the user.
 
 ```go
-type ContextKey int
-
-const (
-    keyAuthUserID ContextKey = iota
-)
-
-func jwtKeyFunc(*jwt.Token) (interface{}, error) {
-    return config.jwtKey, nil
+type ContextKey struct {
+    Name string
 }
+
+var keyAuthUserID = ContextKey{"auth_user_id"}
 
 func withAuth(next http.HandlerFunc) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
@@ -650,7 +646,11 @@ func withAuth(next http.HandlerFunc) http.HandlerFunc {
         tokenString := a[7:]
 
         p := jwt.Parser{ValidMethods: []string{jwt.SigningMethodHS256.Name}}
-        token, err := p.ParseWithClaims(tokenString, &jwt.StandardClaims{}, jwtKeyFunc)
+        token, err := p.ParseWithClaims(
+            tokenString,
+            &jwt.StandardClaims{},
+            func (*jwt.Token) (interface{}, error) { return config.jwtKey, nil },
+        )
         if err != nil {
             respondJSON(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
             return
