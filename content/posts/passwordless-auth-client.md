@@ -175,12 +175,12 @@ Create a `static/js/pages/welcome-page.js` file with the following content:
 ```js
 const template = document.createElement('template')
 template.innerHTML = `
-<h1>Passwordless Demo</h1>
-<h2>Access</h2>
-<form id="access-form">
-    <input type="email" placeholder="Email" required>
-    <button type="submit">Send Magic Link</button>
-</form>
+    <h1>Passwordless Demo</h1>
+    <h2>Access</h2>
+    <form id="access-form">
+        <input type="email" placeholder="Email" autofocus required>
+        <button type="submit">Send Magic Link</button>
+    </form>
 `
 
 export default function welcomePage() {
@@ -257,14 +257,17 @@ import http from '../http.js'
 
 const template = document.createElement('template')
 template.innerHTML = `
-<h1>Authenticating you 👀</h1>
+    <h1>Authenticating you 👀</h1>
 `
 
 export default function callbackPage() {
     const page = template.content.cloneNode(true)
 
-    const hash = decodeURIComponent(location.hash.substr(1))
+    const hash = location.hash.substr(1)
     const fragment = new URLSearchParams(hash)
+    for (const [k, v] of f.entries()) {
+        f.set(decodeURIComponent(k), decodeURIComponent(v))
+    }
     const jwt = fragment.get('jwt')
     const expiresAt = fragment.get('expires_at')
 
@@ -299,9 +302,9 @@ export default function homePage() {
 
     const template = document.createElement('template')
     template.innerHTML = `
-    <h1>Passwordless Demo</h1>
-    <p>Welcome back, ${authUser.username} 👋</p>
-    <button id="logout-button">Logout</button>
+        <h1>Passwordless Demo</h1>
+        <p>Welcome back, ${authUser.username} 👋</p>
+        <button id="logout-button">Logout</button>
     `
 
     const page = template.content
