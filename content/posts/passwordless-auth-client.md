@@ -35,7 +35,6 @@ type SPAFileSystem struct {
 	fs http.FileSystem
 }
 
-// Open wraps http.Dir Open method to enable single-page applications.
 func (fs SPAFileSystem) Open(name string) (http.File, error) {
 	f, err := fs.fs.Open(name)
 	if err != nil {
