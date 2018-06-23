@@ -198,10 +198,10 @@ And now in the install callback you can check if the result is a `string` or a `
 
 ```js
 router.install(result => {
-    main.innerHTML = ''
     if (typeof result === 'string') {
         main.innerHTML = result
     } else if (result instanceof Node) {
+        main.innerHTML = ''
         main.appendChild(result)
     }
 })
