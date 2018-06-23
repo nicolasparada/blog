@@ -11,7 +11,7 @@ draft: false
 Time to continue with the [passwordless auth](/posts/passwordless-auth-server/) posts.
 Previously, we wrote an HTTP service in Go that provided with a passwordless authentication API. Now, we are gonna code a JavaScript client for it.
 
-We'll go with a single page application (SPA) using the technique I showed [here](/posts/javascript-client-router/). Read it first if you haven't yet.
+We'll go with a single page application (SPA) using the technique I showed [here](/posts/js-router/). Read it first if you haven't yet.
 
 Remember the flow:
 
@@ -68,7 +68,7 @@ Let's see that `static/index.html`.
 
 Single page applications leaves all the rendering to JavaScript, so we have an empty body and a `main.js` file.
 
-I'll user the Router from the [last post](/posts/javascript-client-router/).
+I'll user the Router from the [last post](/posts/js-router/).
 
 ## Rendering
 

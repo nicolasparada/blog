@@ -3,6 +3,7 @@ title: "JavaScript Router"
 description: "Coding a router for building single page applications with JavaScript"
 tags: ["javascript"]
 date: 2018-04-25T22:21:12-03:00
+lastmod: 2018-06-23T18:55:20-04:00
 tweet_id: 989317009900036097
 draft: false
 ---
@@ -84,7 +85,6 @@ That example just logs to the console. Let's try to integrate it to a page and s
     <header>
         <a href="/">Home</a>
         <a href="/users/john_doe">Profile</a>
-        <a href="/unknown">Unknown</a>
     </header>
     <main></main>
 </body>
@@ -118,7 +118,7 @@ If you go to localhost and play with it you'll see that it works, but not as you
 We'll have to attach event listeners to each anchor link click, prevent the default behavior and do the correct rendering.
 Because a single page application is something dynamic, you expect creating anchor links on the fly so to add the event listeners I'll use a technique called [event delegation](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#Event_delegation).
 
-I'll attach a click event listener to the whole `body` and check if that click was on an anchor link (or inside one).
+I'll attach a click event listener to the whole document and check if that click was on an anchor link (or inside one).
 
 In the `Router` class I'll have a method that will register a callback that will run for every time we click on a link or a "popstate" event occurs.
 The popstate event is dispatched every time you use the browser back or forward buttons.
@@ -126,40 +126,42 @@ The popstate event is dispatched every time you use the browser back or forward 
 To the callback we'll pass that same `router.exec(location.pathname)` for convenience.
 
 ```js
-install(callback) {
-    const execCallback = () => {
-        callback(this.exec(location.pathname))
+class Router {
+    // ...
+    install(callback) {
+        const execCallback = () => {
+            callback(this.exec(location.pathname))
+        }
+
+        document.addEventListener('click', ev => {
+            if (ev.defaultPrevented
+                || ev.button !== 0
+                || ev.ctrlKey
+                || ev.shiftKey
+                || ev.altKey
+                || ev.metaKey) {
+                return
+            }
+
+            const a = ev.target.closest('a')
+
+            if (a === null
+                || (a.target !== '' && a.target !== '_self')
+                || a.hostname !== location.hostname) {
+                return
+            }
+
+            ev.preventDefault()
+
+            if (a.href !== location.href) {
+                history.pushState(history.state, document.title, a.href)
+                execCallback()
+            }
+        })
+
+        addEventListener('popstate', execCallback)
+        execCallback()
     }
-
-    document.addEventListener('click', ev => {
-        if (ev.defaultPrevented
-            || ev.button !== 0
-            || ev.ctrlKey
-            || ev.shiftKey
-            || ev.altKey
-            || ev.metaKey) {
-            return
-        }
-
-        const a = ev.target.closest('a')
-
-        if (a === null
-            || (a.target !== '' && a.target !== '_self')
-            || a.hostname !== location.hostname) {
-            return
-        }
-
-        ev.preventDefault()
-
-        if (a.href !== location.href) {
-            history.pushState(history.state, document.title, a.href)
-            execCallback()
-        }
-    })
-
-    addEventListener('popstate', execCallback)
-
-    execCallback()
 }
 ```
 
@@ -173,65 +175,20 @@ router.install(result => {
 })
 ```
 
-## Code-Splitting
-
-With the new dynamic `import()` 🔥 we can have code-splitting so easy.
-For example, let's move the user page to a file `pages/user-page.js`:
-
-```js
-export default function userPage(username) {
-    // ...
-}
-```
-
-Now, in the router handler we can import it:
-
-```js
-router.handle(/^\/users\/([^\/]+)$/, username => {
-    return import('./pages/user-page.js')
-        .then(m => m.default(username))
-})
-```
-
-But you'll have to update the rendering to handle the promise `import()` returns.
-
-```js
-router.install(async resultPromise => {
-    main.innerHTML = ''
-    main.innerHTML = await resultPromise
-})
-```
-
-Dynamic import is so cool, but you must know it doesn't have good support yet. It's a stage 3 proposal; only Chrome and Safari by the moment. The good news is, it's [polyfillable](https://gist.github.com/tbranyen/9496397c3f422ebadc382e7daffc1dc6).
-
-## Loading Indicator
-
-Now that we have code-splitting, pages won't load instantly. With a little of CSS and the `:empty` selector you can show a loading indicator.
-
-```css
-main:empty {
-    text-align: center;
-}
-
-main:empty::after {
-    content: 'Loading... please wait.';
-}
-```
-
 ### DOM
 
-Those handlers you pass to the router doesn't need to return a `string`. If you need more power you can return actual DOM. For example, in the home page:
+Those handlers you pass to the router doesn't need to return a `string`. If you need more power you can return actual DOM. Ex:
 
 ```js
-const template = document.createElement('template')
-template.innerHTML = `
+const homeTmpl = document.createElement('template')
+homeTmpl.innerHTML = `
     <div class="container">
         <h1>Home Page</h1>
     </div>
 `
 
-export default function homePage() {
-    const page = template.content.cloneNode(true)
+function homePage() {
+    const page = homeTmpl.content.cloneNode(true)
     // You can do `page.querySelector()` here...
     return page
 }
@@ -240,9 +197,8 @@ export default function homePage() {
 And now in the install callback you can check if the result is a `string` or a `Node`.
 
 ```js
-router.install(async resultPromise => {
+router.install(result => {
     main.innerHTML = ''
-    const result = await resultPromise
     if (typeof result === 'string') {
         main.innerHTML = result
     } else if (result instanceof Node) {
