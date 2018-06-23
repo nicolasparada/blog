@@ -35,10 +35,10 @@ type SPAFileSystem struct {
 	fs http.FileSystem
 }
 
-func (fs SPAFileSystem) Open(name string) (http.File, error) {
-	f, err := fs.fs.Open(name)
+func (spa SPAFileSystem) Open(name string) (http.File, error) {
+	f, err := spa.fs.Open(name)
 	if err != nil {
-		return fs.fs.Open("index.html")
+		return spa.fs.Open("index.html")
 	}
 	return f, nil
 }
@@ -66,7 +66,7 @@ Let's see that `static/index.html`.
 </html>
 ```
 
-Single page application left all the rendering to JavaScript, so we have an empty body and a `main.js` file.
+Single page applications leaves all the rendering to JavaScript, so we have an empty body and a `main.js` file.
 
 I'll user the Router from the [last post](/posts/javascript-client-router/).
 
