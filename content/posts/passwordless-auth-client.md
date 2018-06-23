@@ -3,6 +3,7 @@ title: "Passwordless Auth: Client"
 description: "Coding a client in JavaScript for a passwordless auth HTTP API"
 tags: ["javascript"]
 date: 2018-04-29T22:18:24-03:00
+lastmod: 2018-06-23T16:48:09-04:00
 tweet_id: 990763235065450496
 draft: false
 ---
@@ -12,18 +13,39 @@ Previously, we wrote an HTTP service in Go that provided with a passwordless aut
 
 We'll go with a single page application (SPA) using the technique I showed [here](/posts/javascript-client-router/). Read it first if you haven't yet.
 
+Remember the flow:
+
+- User inputs his email.
+- User gets an email with a magic link.
+- User clicks the link.
+- User is authenticated now ✨.
+
 For the root URL (`/`) we'll show two different pages depending on the auth state: a page with an access form or a page greeting the authenticated user. Another page is for the auth callback redirect.
 
 ## Serving
 
-I'll serve the client with the same Go server, so let's add some routes to the previous `main.go`:
+I'll serve the client with the same Go server, so let's add a route to the previous `main.go`:
 
-```js
-router.Handle("GET", "/js/", http.FileServer(http.Dir("static")))
-router.HandleFunc("GET", "/...", serveFile("static/index.html"))
+```go
+router.Handle("GET", "/...", http.FileServer(SPAFileSystem{http.Dir("static")}))
 ```
 
-This serves files under `static/js`, and `static/index.html` is served for everything else.
+```go
+type SPAFileSystem struct {
+	fs http.FileSystem
+}
+
+// Open wraps http.Dir Open method to enable single-page applications.
+func (fs SPAFileSystem) Open(name string) (http.File, error) {
+	f, err := fs.fs.Open(name)
+	if err != nil {
+		return fs.fs.Open("index.html")
+	}
+	return f, nil
+}
+```
+
+This serves files under `static` with `static/index.html` as fallback.
 
 You can use your own server apart, but you'll have to enable [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) on the server.
 
@@ -146,16 +168,20 @@ function getAuthHeader() {
 export async function handleResponse(res) {
     const body = await res.clone().json().catch(() => res.text())
     const response = {
-        url: res.url,
         statusCode: res.status,
         statusText: res.statusText,
         headers: res.headers,
         body,
     }
-    if (!res.ok) throw Object.assign(
-        new Error(body.message || body || res.statusText),
-        response
-    )
+    if (!res.ok) {
+        const message = typeof body === 'object' && body !== null && 'message' in body
+            ? body.message
+            : typeof body === 'string' && body !== ''
+                ? body
+                : res.statusText
+        const err = new Error(message)
+        throw Object.assign(err, response)
+    }
     return response
 }
 
