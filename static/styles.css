@@ -6,7 +6,7 @@
     --accent: #09a;
     --code: #cf6e77;
     --muted: #aaa;
-    --border: rgba(255, 255, 255, .35);
+    --border: var(--bg);
 
     background-color: var(--bg-root);
     box-sizing: border-box;
@@ -52,8 +52,8 @@ hr {
 
 pre {
     display: block;
-    background-color: var(--bg);
-    border-radius: .1875rem;
+    border: 1px solid var(--border);
+    border-radius: .125rem;
     color: var(--strong);
     padding: 1rem;
     overflow-x: auto;
@@ -62,7 +62,7 @@ pre {
 
 code {
     background-color: var(--bg);
-    border-radius: .1875rem;
+    border-radius: .125rem;
     color: var(--code);
     font-family: 'Fira Mono', monospace;
     padding: 0 .25rem;
