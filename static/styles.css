@@ -6,7 +6,7 @@
     --accent: #09a;
     --code: #cf6e77;
     --muted: #aaa;
-    --border: var(--bg);
+    --border: rgba(255, 255, 255, .1);
 
     background-color: var(--bg-root);
     box-sizing: border-box;
