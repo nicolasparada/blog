@@ -1,6 +1,6 @@
 ---
 title: "Building a Messenger Like App with Go: Schema"
-description: "Building a messenger app with Go: schema"
+description: "Building a messenger like app with Go: schema"
 tags: ["sql"]
 date: 2018-07-05T17:42:56-04:00
 lastmod: 2018-07-05T18:45:46-04:00
