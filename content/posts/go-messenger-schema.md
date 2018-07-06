@@ -1,15 +1,17 @@
 ---
-title: "Building a Messenger Like App with Go: Schema"
-description: "Building a messenger like app with Go: schema"
+title: "Building a Messenger App: Schema"
+description: "Building a messenger like app: schema"
 tags: ["sql"]
 date: 2018-07-05T17:42:56-04:00
-lastmod: 2018-07-05T17:42:56-04:00
+lastmod: 2018-07-06T10:14:32-04:00
 tweet_id: 1015004930074128385
 draft: false
 ---
 
-New post on building a messenger **like** app with Go.
+New post on building a messenger app.
 You already know this kind of app. They allow you to have conversations with your friends. [Facebook Messenger](https://www.messenger.com/), [WhatsApp](https://www.whatsapp.com/) and [Skype](https://www.skype.com/) are a few examples. Tho, these apps allows you to send pictures, stream video, record audio, chat with large groups of people, etc... We'll try to keep it simple and just send text messages between two users.
+
+We'll use [CockroachDB](https://www.cockroachlabs.com/) as the SQL database, [Go](https://golang.org/) as the backend language, and JavaScript to make a web app.
 
 In this first post, we're getting around the database design.
 
