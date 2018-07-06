@@ -167,7 +167,27 @@ Because they have default values, your don't need to write them on the `.env` fi
 
 After reading the configuration and connecting to the database, we create an OAuth config. We use the origin to build the callback URL (the same we registered on the github page). And we set the scope to "read:user". This will give us permission to read the public user info. That's because we just need his username and avatar. Then we initialize the cookie and JWT signers. Define some endpoints and start the server.
 
-Lets implement those HTTP handlers then.
+Lets implement those HTTP handlers then. But before, let write a couple functions to send HTTP responses.
+
+```go
+func respond(w http.ResponseWriter, v interface{}, statusCode int) {
+	b, err := json.Marshal(v)
+	if err != nil {
+		respondError(w, fmt.Errorf("could not marshal response: %v", err))
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(statusCode)
+	w.Write(b)
+}
+
+func respondError(w http.ResponseWriter, err error) {
+	log.Println(err)
+	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+}
+```
+
+The first one is to send JSON and the second one logs the error to the console and return a `500 Internal Server Error` error.
 
 ## OAuth Start
 
