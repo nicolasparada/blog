@@ -18,8 +18,8 @@ In this first post, we're getting around the database design.
 ```sql
 CREATE TABLE users (
     id SERIAL NOT NULL PRIMARY KEY,
-    username STRING(18) NOT NULL UNIQUE,
-    avatar_url STRING(128),
+    username STRING NOT NULL UNIQUE,
+    avatar_url STRING,
     github_id INT NOT NULL UNIQUE
 );
 ```
@@ -55,7 +55,7 @@ To know whether the user has unread messages we have the `messages_read_at` fiel
 ```sql
 CREATE TABLE messages (
     id SERIAL NOT NULL PRIMARY KEY,
-    content STRING(256) NOT NULL,
+    content STRING NOT NULL,
     user_id INT NOT NULL REFERENCES users ON DELETE CASCADE,
     conversation_id INT NOT NULL REFERENCES conversations ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
