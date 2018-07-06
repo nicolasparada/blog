@@ -27,14 +27,15 @@ Of course, this app requires users. We will go with social login. I selected jus
 ```sql
 CREATE TABLE conversations (
     id SERIAL NOT NULL PRIMARY KEY,
-    last_message_created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    INDEX(last_message_created_at DESC)
+    last_message_id INT,
+    INDEX (last_message_id DESC)
 );
 ```
 
-Each conversation has an index on `last_message_created_at` to sort them. Every time we insert a new message, we'll go and update this field.
+Each conversation references the last message. Every time we insert a new message, we'll go and update this field.
+(I'll add the foreign key constraint below).
 
-... You can say that we can group conversations and get the last message of each and use that timestamp, but that will add much more complexity to the queries.
+... You can say that we can group conversations and get the last message that way, but that will add much more complexity to the queries.
 
 ```sql
 CREATE TABLE participants (
@@ -47,7 +48,7 @@ CREATE TABLE participants (
 
 Even tho I said conversations will be between just two users, we'll go with a design that allow the possibility to add multiple participants to a conversation. That's why we have a participants table between the conversation and users.
 
-To know whether the user has unread messages we have the `messages_read_at` field. Every time the user read in a conversation, we update this value, so we can compare it with `last_message_created_at`.
+To know whether the user has unread messages we have the `messages_read_at` field. Every time the user read in a conversation, we update this value, so we can compare it with the conversation last message `created_at` field.
 
 ```sql
 CREATE TABLE messages (
@@ -61,6 +62,14 @@ CREATE TABLE messages (
 ```
 
 Last but not least is the messages table, it saves a reference to the user who created it and the conversation in which it goes. Is has an index on `created_at` too to sort messages.
+
+```sql
+ALTER TABLE conversations
+ADD CONSTRAINT fk_last_message_id_ref_messages
+FOREIGN KEY (last_message_id) REFERENCES messages ON DELETE SET NULL;
+```
+
+And yep, the fk constraint I said.
 
 These four tables will do the trick. Have any question or advice? Leave it below 🙂
 
