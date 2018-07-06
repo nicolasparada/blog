@@ -4,7 +4,7 @@ description: "Building a Messenger App: OAuth"
 tags: ["golang", "sql"]
 date: 2018-07-06T10:56:12-04:00
 lastmod: 2018-07-06T10:56:12-04:00
-tweet_id:
+tweet_id: 1015277042621931526
 draft: false
 ---
 
