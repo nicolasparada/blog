@@ -10,11 +10,11 @@ draft: false
 
 [Previous part: Schema](/posts/go-messenger-schema/).
 
-In this post we start the backend and add social login.
+In this post we start the backend by adding social login.
 
-This is how it works: the user click on a link that redirect him to the GitHub authorization page. The user grant access to his info and get redirected back logged in. The next time he try to login, won't be asked to grant permission, it is remembered so the login flow is as fast as a single click.
+This is how it works: the user click on a link that redirects him to the GitHub authorization page. The user grant access to his info and get redirected back logged in. The next time he tries to login, he won't be asked to grant permission, it is remembered so the login flow is as fast as a single click.
 
-Internally, the history is more complex tho. First we need the register an new [OAuth app on GitHub](https://github.com/settings/applications/new).
+Internally, the history is more complex tho. First we need the register a new [OAuth app on GitHub](https://github.com/settings/applications/new).
 
 The important part is the callback URL. Set it to `http://localhost:3000/api/oauth/github/callback`.
 On development we are on localhost, so when you ship the app to production, register a new app with the correct callback URL.
@@ -157,15 +157,15 @@ GITHUB_CLIENT_SECRET=your_github_client_secret
 
 The other enviroment variables we use are:
 
-- `PORT`: The port in which the server runs. It fallbacks to `3000`.
-- `ORIGIN`: Your domain. It fallbacks to `http://localhost:3000/`. The port can also be extracted from this.
-- `DATABASE_URL`: The Cockroach address. It fallbacks to `postgresql://root@127.0.0.1:26257/messenger?sslmode=disable`.
+- `PORT`: The port in which the server runs. Defaults to `3000`.
+- `ORIGIN`: Your domain. Defaults to `http://localhost:3000/`. The port can also be extracted from this.
+- `DATABASE_URL`: The Cockroach address. Defaults to `postgresql://root@127.0.0.1:26257/messenger?sslmode=disable`.
 - `HASH_KEY`: Key to sign cookies. Yeah, we'll use signed cookies for security.
 - `JWT_KEY`: Key to sign JSON web tokens.
 
 Because they have default values, your don't need to write them on the `.env` file.
 
-After reading the configuration and connecting to the database, we create an OAuth config. We use the origin to build the callback URL (this is the same we registered on the github page). And we set the scope to "read:user". This give us permission to read the public user info. That's because we just need his username and avatar. Then we initialize the cookie and JWT signers. Define some endpoints and start the server.
+After reading the configuration and connecting to the database, we create an OAuth config. We use the origin to build the callback URL (the same we registered on the github page). And we set the scope to "read:user". This will give us permission to read the public user info. That's because we just need his username and avatar. Then we initialize the cookie and JWT signers. Define some endpoints and start the server.
 
 Lets implement those HTTP handlers then.
 
@@ -322,11 +322,11 @@ First we try the decode the cookie with the state we saved before. And compare i
 Then we exchange the code for a token. This token is used to create an HTTP client to make requests to the GitHub API.
 So we do a GET request to `https://api.github.com/user`. This endpoint will give us the current authenticated user info in JSON format. We decode it to get the user ID, login (username) and avatar URL.
 
-Then we try to find a user with that GitHub ID on the database. If none found, we create one using that data.
+Then we try to find a user with that GitHub ID on the database. If none is found, we create one using that data.
 
-Then, with the newly created user, we issue a JSON web token and redirect to the frontend with the token, along side the expiration date in the query string.
+Then, with the newly created user, we issue a JSON web token with the user ID as Subject and redirect to the frontend with the token, along side the expiration date in the query string.
 
-The web app will be for another post, but the URL you are being redirected is `/callback?token=token_here&expires_at=some_date`. There we'll have some JavaScript that extract the token and expiration date from the URL and does a GET request to `/api/auth_user` with the token in the `Authorization` header in the form of `Bearer token_here` to get the authenticated user and save it to localStorage.
+The web app will be for another post, but the URL you are being redirected is `/callback?token=token_here&expires_at=some_date`. There we'll have some JavaScript to extract the token and expiration date from the URL and do a GET request to `/api/auth_user` with the token in the `Authorization` header in the form of `Bearer token_here` to get the authenticated user and save it to localStorage.
 
 ## Guard Middleware
 
@@ -399,7 +399,7 @@ func getAuthUser(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-That's it. We use the guard middleware to get the current authenticated user id and do a query to the database.
+We use the guard middleware to get the current authenticated user id and do a query to the database.
 
 ---
 
