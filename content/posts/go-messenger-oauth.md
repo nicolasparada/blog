@@ -217,7 +217,7 @@ func githubOAuthStart(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-OAuth2 uses a mechanism to prevent CSRF attacks so it requires a "state". We use nanoid the create a random string and use that as state. We save it as a cookie too.
+OAuth2 uses a mechanism to prevent CSRF attacks so it requires a "state". We use nanoid to create a random string and use that as state. We save it as a cookie too.
 
 ## OAuth Callback
 
@@ -337,7 +337,7 @@ func githubOAuthCallback(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-First we try the decode the cookie with the state we saved before. And compare it with the state that comes in the query string. In case they don't match, we return a `418 I'm teapot` error.
+First we try to decode the cookie with the state we saved before. And compare it with the state that comes in the query string. In case they don't match, we return a `418 I'm teapot` error.
 
 Then we exchange the code for a token. This token is used to create an HTTP client to make requests to the GitHub API.
 So we do a GET request to `https://api.github.com/user`. This endpoint will give us the current authenticated user info in JSON format. We decode it to get the user ID, login (username) and avatar URL.
