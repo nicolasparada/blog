@@ -138,12 +138,13 @@ func intEnv(key string, fallbackValue int) int {
 }
 ```
 
-Install the dependencies:
+Install dependencies:
 ```
 go get -u github.com/gorilla/securecookie
 go get -u github.com/joho/godotenv
 go get -u github.com/knq/jwt
 go get -u github.com/lib/pq
+ge get -u github.com/matoous/go-nanoid
 go get -u github.com/matryer/way
 go get -u golang.org/x/oauth2
 ```
