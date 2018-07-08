@@ -1,6 +1,6 @@
 ---
 title: "Building a Messenger App: OAuth"
-description: "Building a Messenger App: OAuth"
+description: "Building a messenger app: OAuth"
 tags: ["golang", "sql"]
 date: 2018-07-06T10:56:12-04:00
 lastmod: 2018-07-06T10:56:12-04:00
