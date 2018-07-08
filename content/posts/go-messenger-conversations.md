@@ -4,7 +4,7 @@ description: "Building a messenger app: conversations"
 tags: ["golang", "sql"]
 date: 2018-07-08T18:09:07-04:00
 lastmod: 2018-07-08T18:09:07-04:00
-tweet_id:
+tweet_id: 1016108778092154880
 draft: false
 ---
 
