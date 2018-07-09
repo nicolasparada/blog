@@ -71,7 +71,7 @@ type Message struct {
 }
 ```
 
-Messages are for the next post, but I define the struct now since we are using it. Most of the fields are the same as the database table. We have `mine` to tell if the message is owned by the current authenticated user and `ReceiverID` will be used to filter messanges once we add realtime capabilities.
+Messages are for the next post, but I define the struct now since we are using it. Most of the fields are the same as the database table. We have `Mine` to tell if the message is owned by the current authenticated user and `ReceiverID` will be used to filter messanges once we add realtime capabilities.
 
 Lets write the HTTP handler then. It's quite long but don't be scared.
 
