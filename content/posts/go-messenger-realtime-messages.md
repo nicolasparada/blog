@@ -77,6 +77,8 @@ Remember in the [last post](/posts/go-messenger-messages/) when we created the m
 go newMessageCreated(message)
 ```
 
+Insert that line just where we left the comment.
+
 ```go
 func newMessageCreated(message Message) error {
 	if err := db.QueryRow(`
