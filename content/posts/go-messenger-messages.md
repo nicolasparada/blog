@@ -4,7 +4,7 @@ description: "Building a messenger app: messages"
 tags: ["golang", "sql"]
 date: 2018-07-10T14:39:48-04:00
 lastmod: 2018-07-10T14:39:48-04:00
-tweet_id:
+tweet_id: 1016756521244479490
 draft: false
 ---
 
@@ -27,7 +27,7 @@ Messages goes into conversations so the endpoint includes the conversation ID.
 
 ## Create Message
 
-This endpoint handles POST requests to `/api/conversations/conversation_id_here/messages` with a JSON body with just the message content and return the newly created message. It has also a side affect: it updates the participant `messages_read_at` field.
+This endpoint handles POST requests to `/api/conversations/conversation_id_here/messages` with a JSON body with just the message content and return the newly created message. It has two side affects: it updates the conversation `last_message_id` and updates the participant `messages_read_at`.
 
 ```go
 func createMessage(w http.ResponseWriter, r *http.Request) {
