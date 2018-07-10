@@ -4,7 +4,7 @@ description: "Building a messenger app: realtime messages"
 tags: ["golang", "sql"]
 date: 2018-07-10T17:24:52-04:00
 lastmod: 2018-07-10T17:24:52-04:00
-tweet_id:
+tweet_id: 1016809612065034240
 draft: false
 ---
 
