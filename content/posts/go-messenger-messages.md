@@ -5,7 +5,7 @@ tags: ["golang", "sql"]
 date: 2018-07-10T14:39:48-04:00
 lastmod: 2018-07-10T14:39:48-04:00
 tweet_id:
-draft: true
+draft: false
 ---
 
 This post is the 4th on a series:
