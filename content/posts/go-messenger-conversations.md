@@ -3,7 +3,7 @@ title: "Building a Messenger App: Conversations"
 description: "Building a messenger app: conversations"
 tags: ["golang", "sql"]
 date: 2018-07-08T18:09:07-04:00
-lastmod: 2018-07-08T18:09:07-04:00
+lastmod: 2018-07-10T14:38:40-04:00
 tweet_id: 1016108778092154880
 draft: false
 ---
@@ -80,11 +80,11 @@ func createConversation(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Username string `json:"username"`
 	}
+	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	defer r.Body.Close()
 
 	input.Username = strings.TrimSpace(input.Username)
 	if input.Username == "" {
@@ -105,7 +105,7 @@ func createConversation(w http.ResponseWriter, r *http.Request) {
 	defer tx.Rollback()
 
 	var otherParticipant User
-	if err := tx.QueryRow(`
+	if err := tx.QueryRowContext(ctx, `
 		SELECT id, avatar_url FROM users WHERE username = $1
 	`, input.Username).Scan(
 		&otherParticipant.ID,
@@ -126,7 +126,7 @@ func createConversation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var conversationID string
-	if err := tx.QueryRow(`
+	if err := tx.QueryRowContext(ctx, `
 		SELECT conversation_id FROM participants WHERE user_id = $1
 		INTERSECT
 		SELECT conversation_id FROM participants WHERE user_id = $2
@@ -139,7 +139,7 @@ func createConversation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var conversation Conversation
-	if err = tx.QueryRow(`
+	if err = tx.QueryRowContext(ctx, `
 		INSERT INTO conversations DEFAULT VALUES
 		RETURNING id
 	`).Scan(&conversation.ID); err != nil {
@@ -147,7 +147,7 @@ func createConversation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err = tx.Exec(`
+	if _, err = tx.ExecContext(ctx, `
 		INSERT INTO participants (user_id, conversation_id) VALUES
 			($1, $2),
 			($3, $2)

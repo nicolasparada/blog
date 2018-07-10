@@ -3,7 +3,7 @@ title: "Building a Messenger App: OAuth"
 description: "Building a messenger app: OAuth"
 tags: ["golang", "sql"]
 date: 2018-07-06T10:56:12-04:00
-lastmod: 2018-07-06T10:56:12-04:00
+lastmod: 2018-07-10T14:38:40-04:00
 tweet_id: 1015277042621931526
 draft: false
 ---
@@ -296,10 +296,10 @@ func githubOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	if err = tx.QueryRow(`
+	if err = tx.QueryRowContext(ctx, `
 		SELECT id, username, avatar_url FROM users WHERE github_id = $1
 	`, githubUser.ID).Scan(&user.ID, &user.Username, &user.AvatarURL); err == sql.ErrNoRows {
-		if err = tx.QueryRow(`
+		if err = tx.QueryRowContext(ctx, `
 			INSERT INTO users (username, avatar_url, github_id) VALUES ($1, $2, $3)
 			RETURNING id
 		`, githubUser.Login, githubUser.AvatarURL, githubUser.ID).Scan(&user.ID); err != nil {
