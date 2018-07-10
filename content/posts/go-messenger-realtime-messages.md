@@ -15,7 +15,7 @@ This post is the 5th on a series:
 - [Part 3: Conversations](/posts/go-messenger-conversations/)
 - [Part 4: Messages](/posts/go-messenger-messages/)
 
-For realtime messages we'll use [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events). This is an open connection in which we can stream data. We'll have and endpoint in which the user subscribes to all the messages he is interested in.
+For realtime messages we'll use [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events). This is an open connection in which we can stream data. We'll have and endpoint in which the user subscribes to all the messages sended to him.
 
 ## Message Bus
 
@@ -71,7 +71,7 @@ var messageBus = &MessageBus{Clients: make(map[MessageClient]struct{})}
 
 ## New Message Created
 
-Remember in the [last post](/posts/go-messenger-messages/) when we created the message, we left a TODO comment. There we'll dispatch a goroutine with this function.
+Remember in the [last post](/posts/go-messenger-messages/) when we created the message, we left a "TODO" comment. There we'll dispatch a goroutine with this function.
 
 ```go
 go newMessageCreated(message)
@@ -102,7 +102,7 @@ Lets go to the `main()` function and add this route:
 router.HandleFunc("GET", "/api/messages", guard(subscribeToMessages))
 ```
 
-This handles GET requests on `/api/messages`. The request should be an [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) connection. It responds with an event stream in which the data is JSON formatted.
+This endpoint handles GET requests on `/api/messages`. The request should be an [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) connection. It responds with an event stream in which the data is JSON formatted.
 
 ```go
 func subscribeToMessages(w http.ResponseWriter, r *http.Request) {
@@ -162,6 +162,8 @@ data: {"foo":"bar"}\n\n
 We are using `fmt.Fprintf()` to write to the response writter in this format and flushing the data in each iteration of the loop.
 
 This will loop until the connection is closed using the response close notifier interface. We defered the close of the channel and the unregistration of the client, so when the loop ends, the channel will be closed and the client unregistered.
+
+Note aside, the JavaScript API to work with Server-Sent Events (EventSource) doesn't support setting custom headers 😒 So we cannot set `Authorization: Bearer token_here`. And that's the reason why the `guard()` middleware reads the token from the URL query string also.
 
 ---
 
