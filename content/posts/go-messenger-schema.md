@@ -3,7 +3,7 @@ title: "Building a Messenger App: Schema"
 description: "Building a messenger app: schema"
 tags: ["sql"]
 date: 2018-07-05T17:42:56-04:00
-lastmod: 2018-07-06T10:14:32-04:00
+lastmod: 2018-07-12T20:40:42-04:00
 tweet_id: 1015004930074128385
 draft: false
 ---
