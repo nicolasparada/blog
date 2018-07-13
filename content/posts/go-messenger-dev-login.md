@@ -93,7 +93,7 @@ func issueToken(subject string, exp time.Time) (string, error) {
 }
 ```
 
-The function does the same we did [previouly](/posts/go-messenger-oauth/). I just moved it to reuse code.
+The function does the same we did [previously](/posts/go-messenger-oauth/). I just moved it to reuse code.
 
 After creating the token, it responds with the user, token and expiration date.
 
