@@ -3,7 +3,7 @@ title: "Building a Messenger App: Conversations"
 description: "Building a messenger app: conversations"
 tags: ["golang", "sql"]
 date: 2018-07-08T18:09:07-04:00
-lastmod: 2018-07-10T14:38:40-04:00
+lastmod: 2018-07-13T19:06:59-04:00
 tweet_id: 1016108778092154880
 draft: false
 ---
@@ -267,7 +267,7 @@ func getConversations(w http.ResponseWriter, r *http.Request) {
 
 This handler just does a query to the database. It queries to the conversations table with some joins... First, to the messages table to get the last message. Then to the participants, but it adds a condition to a participant whose ID is not the one of the current authenticated user; this is the other participant. Then it joins to the users table to get his username and avatar. And finally joins with the participants again but with the contrary condition, so this participant is the current authenticated user. We compare `messages_read_at` with the message `created_at` to know whether the conversation has unread messages. And we use the message `user_id` to check if it's "mine" or not.
 
-Note that this query assumes that a conversation has just two users. It only works for that scenario.
+Note that this query assumes that a conversation has just two users. It only works for that scenario. Also, if you want to show a count of the unread messages, this design isn't good. I think you could add a `unread_messages_count` `INT` field on the `participants` table and increment it each time a new message is created and reset it when the user read them.
 
 Then it iterates over the rows, scan each one to make an slice of conversations and respond with those at the end.
 
