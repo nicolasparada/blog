@@ -73,6 +73,21 @@ FOREIGN KEY (last_message_id) REFERENCES messages ON DELETE SET NULL;
 
 And yep, the fk constraint I said.
 
-These four tables will do the trick. Have any question or advice? Leave it below 🙂
+These four tables will do the trick. You can save those queries to a file and pipe it to the Cockroach CLI. First start a new node:
+
+```bash
+cockroach start --insecure --host 127.0.0.1
+```
+
+Then create the database and tables:
+
+```bash
+cockroach sql --insecure -e "CREATE DATABASE messenger"
+cat schema.sql | cockroach sql --insecure -d messenger
+```
+
+---
+
+That's it. Got any question, advice or comment? Leave it below 🙂
 
 In the next part we'll do the login. Wait for it.
