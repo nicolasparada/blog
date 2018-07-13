@@ -116,4 +116,4 @@ cat seed_users.sql | cockroach sql --insecure -d messenger
 
 That's it. Once you deploy the code to production and use your own domain (origin) this login function won't be available.
 
-Got any question, advice or comment? Just leave it below 👍
+This post concludes the backend. Got any question, advice or comment? Just leave it below 👍
