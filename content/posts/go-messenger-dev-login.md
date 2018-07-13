@@ -78,7 +78,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 ```
 
 First it checks we are on localhost or it responds with `404 Not Found`.
-It decodes the body skipping validation since this is just for development. Then it queries to the database for a user with the given username, if none is found, it returns with `404 Not Found`. Then it issues a new JSON web token.
+It decodes the body skipping validation since this is just for development. Then it queries to the database for a user with the given username, if none is found, it returns with `404 Not Found`. Then it issues a new JSON web token using the user ID as Subject.
 
 ```go
 func issueToken(subject string, exp time.Time) (string, error) {
