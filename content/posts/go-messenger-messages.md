@@ -3,7 +3,7 @@ title: "Building a Messenger App: Messages"
 description: "Building a messenger app: messages"
 tags: ["golang", "sql"]
 date: 2018-07-10T14:39:48-04:00
-lastmod: 2018-07-10T14:39:48-04:00
+lastmod: 2018-07-16T03:04:38-04:00
 tweet_id: 1016756521244479490
 draft: false
 ---
@@ -44,7 +44,7 @@ func createMessage(w http.ResponseWriter, r *http.Request) {
 	input.Content = removeSpaces(input.Content)
 	if input.Content == "" {
 		errs["content"] = "Message content required"
-	} else if len(input.Content) > 480 {
+	} else if len([]rune(input.Content)) > 480 {
 		errs["content"] = "Message too long. 480 max"
 	}
 	if len(errs) != 0 {
