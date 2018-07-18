@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 {{ partial "head.html" . }}
-
 <body>
     <nav class="site-nav">
         <a href="/">Go back home</a>
@@ -16,7 +14,6 @@
             </div>
             <div class="post-content">{{ .Content }}</div>
         </article>
-
         <div class="post-actions">
             {{- if .Params.tweet_id }}
             <a href="https://twitter.com/intent/retweet?tweet_id={{ .Params.tweet_id }}" target="_blank" class="retweet">
@@ -28,11 +25,7 @@
             </a>
             {{ end -}}
         </div>
-
         <div id="comments" class="comments" data-id="{{ .UniqueID }}"></div>
     </div>
-
-    {{ template "_internal/google_analytics_async.html" . }}
 </body>
-
 </html>
