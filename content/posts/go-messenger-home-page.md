@@ -5,7 +5,7 @@ tags: ["javascript"]
 date: 2018-07-19T10:32:06-04:00
 lastmod: 2018-07-19T10:32:06-04:00
 tweet_id:
-draft: true
+draft: false
 ---
 
 This post is the 8th on a series:
