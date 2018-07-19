@@ -142,7 +142,7 @@ function renderConversation(conversation) {
 }
 ```
 
-Each conversation item contains a link to the conversation page and display the other participant info and a preview of the last message. Also, you can use `.hasUnreadMessages` to add a class to the item and do some styling with CSS. Maybe a bolder font or accent the color.
+Each conversation item contains a link to the conversation page and displays the other participant info and a preview of the last message. Also, you can use `.hasUnreadMessages` to add a class to the item and do some styling with CSS. Maybe a bolder font or accent the color.
 
 Note that we're escaping the message content. That function comes from `static/shared.js`:
 
