@@ -61,7 +61,7 @@ function getConversation(id) {
 }
 ```
 
-This page, receives the conversation ID the router extracted from the URL.
+This page receives the conversation ID the router extracted from the URL.
 
 First it does a GET request to `/api/conversations/conversation_id_here` to get info about the conversation. In case of error, we show it and redirect back to `/`. Then we render info about the other participant.
 
@@ -81,7 +81,7 @@ try {
 }
 ```
 
-Updated the `conversationPage()` function to fetch the messages too. We use `Promise.all()` to do both request at the same time.
+Update the `conversationPage()` function to fetch the messages too. We use `Promise.all()` to do both request at the same time.
 
 ```js
 function getMessages(conversationId) {
@@ -238,6 +238,8 @@ function readMessages(conversationId) {
 We also make use of partial application to have the conversation ID here.
 <br>
 When a new message arrives, first we check if it's from this conversation. If it is, we go a prepend a message item to the list and do a POST request to `/api/conversations/conversation_id_here/read_messages` to updated the last time the participant read messages.
+
+---
 
 That concludes this series. The messenger app is now functional.
 
