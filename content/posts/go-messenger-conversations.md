@@ -306,8 +306,10 @@ func getConversation(w http.ResponseWriter, r *http.Request) {
 		&otherParticipant.AvatarURL,
 	); err == sql.ErrNoRows {
 		http.Error(w, "Conversation not found", http.StatusNotFound)
+		return
 	} else if err != nil {
 		respondError(w, fmt.Errorf("could not query conversation: %v", err))
+		return
 	}
 
 	conversation.ID = conversationID
