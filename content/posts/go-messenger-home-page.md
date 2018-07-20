@@ -41,7 +41,7 @@ page.getElementById('conversation-form').onsubmit = onConversationSubmit
 Now we can listen to the "submit" event to create the conversation.
 
 ```js
-import http from '../http.js';
+import http from '../http.js'
 import { navigate } from '../router.js'
 
 async function onConversationSubmit(ev) {
