@@ -99,12 +99,12 @@ Now, add that list to the markup.
 
 ```js
 const messagesOList = page.getElementById('messages')
-for (const message of messages) {
+for (const message of messages.reverse()) {
     messagesOList.appendChild(renderMessage(message))
 }
 ```
 
-So we can append messages to the list.
+So we can append messages to the list. We show them in reverse order.
 
 ```js
 function renderMessage(message) {
@@ -124,16 +124,6 @@ function renderMessage(message) {
 ```
 
 Each message item displays the message content itself with its timestamp. Using `.mine` we can append a different class to the item so maybe you can show the message to the right.
-
-There is a CSS tip for you 🤓 On chats, it's common to show the latest messages at the bottom and scroll up to see the messages history. You can show them in that order using `flex-direction: column-reverse` on the parent element.
-
-```css
-#messages {
-    display: flex;
-    flex-direction: column-reverse;
-    overflow-y: auto;
-}
-```
 
 ## Message Form
 
@@ -174,7 +164,7 @@ function messageSubmitter(conversationId) {
                 return
             }
 
-            messagesOList.insertAdjacentElement('afterbegin', renderMessage(message))
+            messagesOList.appendChild(renderMessage(message))
         } catch (err) {
             if (err.statusCode === 422) {
                 input.setCustomValidity(err.body.errors.content)
@@ -225,7 +215,7 @@ function messageArriver(conversationId) {
             return
 
         }
-        messagesOList.insertAdjacentElement('afterbegin', renderMessage(message))
+        messagesOList.appendChild(renderMessage(message))
         readMessages(message.conversationId)
     }
 }
