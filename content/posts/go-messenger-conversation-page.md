@@ -243,4 +243,8 @@ When a new message arrives, first we check if it's from this conversation. If it
 
 That concludes this series. The messenger app is now functional.
 
-I'll add pagination on the conversation and message list, also user searching before sharing the source code. I'll updated once it's ready along with a hosted demo 👨‍💻
+~~I'll add pagination on the conversation and message list, also user searching before sharing the source code. I'll updated once it's ready along with a hosted demo 👨‍💻~~
+
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo)
+<br>
+[Demo](https://go-messenger-demo.herokuapp.com/)
