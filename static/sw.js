@@ -1,10 +1,11 @@
-const VERSION = 15
+const VERSION = 16
 const staticCacheName = `static-v${VERSION}`
 const staticUrlsToCache = [
     '/external-links.js',
     '/manifest.json',
     '/offline.html',
     '/styles.css',
+    '/syntax.css',
 ]
 const viewsCacheName = 'views'
 const cacheWhitelist = [
