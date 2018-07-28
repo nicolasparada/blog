@@ -8,9 +8,8 @@
     --muted: #999;
     --border: rgba(255, 255, 255, .1);
 
-    --serif-font: 'PT Serif', serif;
-    --sans-serif-font: 'PT Sans', sans-serif;
-    --monospace-font: 'Fira Code', 'Fira Code', monospace;
+    --sans-serif-font: 'PT Sans', serif;
+    --monospace-font: 'Roboto Mono', monospace;
 
     background-color: var(--bg-root);
     box-sizing: border-box;
@@ -38,14 +37,6 @@ a {
 
 img {
     max-width: 100%;
-}
-
-article {
-    font-family: var(--serif-font);
-}
-
-h1, h2, h3, h4 {
-    font-family: var(--sans-serif-font);
 }
 
 hr {
@@ -80,7 +71,7 @@ pre code {
 }
 
 pre::-webkit-scrollbar {
-    display:none
+    display: none
 }
 
 .site-nav {
