@@ -1,0 +1,25 @@
+.chroma .k,
+.chroma .kd,
+.chroma .kr,
+.chroma .kt,
+.chroma .nb {
+    font-weight: bold;
+}
+
+.chroma .s,
+.chroma .s1,
+.chroma .s2,
+.chroma .sb {
+    color: var(--accent);
+}
+
+.chroma .kc,
+.chroma .mi,
+.chroma .si {
+    color: var(--code);
+}
+
+.chroma .c1,
+.chroma .cm {
+    color: var(--muted);
+}

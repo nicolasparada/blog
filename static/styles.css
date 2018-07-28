@@ -3,16 +3,20 @@
     --bg: #0e0e0e;
     --fg: white;
     --strong: white;
-    --accent: #09a;
-    --code: #cf6e77;
-    --muted: #aaa;
+    --accent: #3AD2D0;
+    --code: #ff92b8;
+    --muted: #999;
     --border: rgba(255, 255, 255, .1);
+
+    --serif-font: 'PT Serif', serif;
+    --sans-serif-font: 'PT Sans', sans-serif;
+    --monospace-font: 'Fira Code', 'Fira Code', monospace;
 
     background-color: var(--bg-root);
     box-sizing: border-box;
     color: var(--fg);
     font-size: 19px;
-    font-family: 'PT Sans', sans-serif;
+    font-family: var(--sans-serif-font);
     line-height: 1.6;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
@@ -37,12 +41,11 @@ img {
 }
 
 article {
-    font-family: 'PT Serif', serif;
+    font-family: var(--serif-font);
 }
 
 h1, h2, h3, h4 {
-    font-family: 'PT Sans', sans-serif;
-    font-weight: 700;
+    font-family: var(--sans-serif-font);
 }
 
 hr {
@@ -53,18 +56,17 @@ hr {
 pre {
     display: block;
     border: 1px solid var(--border);
-    border-radius: .6rem;
+    border-radius: 1rem;
     color: var(--strong);
     padding: 1rem;
     overflow-x: auto;
-    line-height: 1.3;
 }
 
 code {
     background-color: var(--bg);
     border-radius: .125rem;
     color: var(--code);
-    font-family: 'Fira Mono', monospace;
+    font-family: var(--monospace-font);
     padding: 0 .25rem;
     font-size: .8125rem;
     overflow-wrap: break-word;
