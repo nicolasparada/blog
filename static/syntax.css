@@ -10,16 +10,16 @@
 .chroma .s1,
 .chroma .s2,
 .chroma .sb {
-    color: var(--accent);
+    color: var(--accent-color);
 }
 
 .chroma .kc,
 .chroma .mi,
 .chroma .si {
-    color: var(--code);
+    color: var(--inline-code-color);
 }
 
 .chroma .c1,
 .chroma .cm {
-    color: var(--muted);
+    color: var(--muted-color);
 }
