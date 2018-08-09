@@ -3,7 +3,7 @@ title: "Building a Messenger App: Schema"
 description: "Building a messenger app: schema"
 tags: ["sql"]
 date: 2018-07-05T17:42:56-04:00
-lastmod: 2018-07-12T20:40:42-04:00
+lastmod: 2018-08-09T17:15:07-04:00
 tweet_id: 1015004930074128385
 draft: false
 ---
@@ -91,3 +91,5 @@ cat schema.sql | cockroach sql --insecure -d messenger
 That's it. Got any question, advice or comment? Leave it below 🙂
 
 In the next part we'll do the login. Wait for it.
+
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo)

@@ -3,7 +3,7 @@ title: "Building a Messenger App: Access Page"
 description: "Building a messenger app: access page"
 tags: ["javascript"]
 date: 2018-07-16T08:54:36-04:00
-lastmod: 2018-07-16T08:54:36-04:00
+lastmod: 2018-08-09T17:15:07-04:00
 tweet_id: 1018842920286375936
 draft: false
 ---
@@ -428,3 +428,5 @@ Remember to remove this form once you are done with the frontend.
 That's all for this post. In the next one, we'll continue with the home page to add a form to start conversations and display a list with the latest ones.
 
 Got any question, advice or comment? Leave it below 👍
+
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo)

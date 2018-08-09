@@ -3,7 +3,7 @@ title: "Building a Messenger App: Conversation Page"
 description: "Building a messenger app: conversation page"
 tags: ["javascript"]
 date: 2018-07-20T12:15:43-04:00
-lastmod: 2018-07-20T12:15:43-04:00
+lastmod: 2018-08-09T17:15:07-04:00
 tweet_id: 1020345424522235910
 draft: false
 ---

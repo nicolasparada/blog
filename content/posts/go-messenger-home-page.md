@@ -3,7 +3,7 @@ title: "Building a Messenger App: Home Page"
 description: "Building a messenger app: home page"
 tags: ["javascript"]
 date: 2018-07-19T10:32:06-04:00
-lastmod: 2018-07-19T10:32:06-04:00
+lastmod: 2018-08-09T17:15:07-04:00
 tweet_id: 1019955422495637509
 draft: false
 ---
@@ -227,3 +227,5 @@ That covers the home page 😊
 On the next post we'll code the conversation page.
 
 Got any question, advice or comment? Leave it below 👇
+
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo)

@@ -3,7 +3,7 @@ title: "Building a Messenger App: Messages"
 description: "Building a messenger app: messages"
 tags: ["golang", "sql"]
 date: 2018-07-10T14:39:48-04:00
-lastmod: 2018-07-16T03:04:38-04:00
+lastmod: 2018-08-09T17:15:07-04:00
 tweet_id: 1016756521244479490
 draft: false
 ---
@@ -292,3 +292,5 @@ It uses the same function we've been using to update the participant `messages_r
 That concludes it. Realtime messages is the only part left in the backend. Wait for it in the next post.
 
 Got any question, advice or comment? Leave it below 👍
+
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo)

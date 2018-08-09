@@ -3,7 +3,7 @@ title: "Building a Messenger App: Realtime Messages"
 description: "Building a messenger app: realtime messages"
 tags: ["golang", "sql"]
 date: 2018-07-10T17:24:52-04:00
-lastmod: 2018-07-10T17:24:52-04:00
+lastmod: 2018-08-09T17:15:07-04:00
 tweet_id: 1016809612065034240
 draft: false
 ---
@@ -173,3 +173,5 @@ That concludes the realtime messages.
 I'd like to say that's everything in the backend, but to code the frontend I'll add one more endpoint to login. A login that will be just for development.
 
 Got any question, advice or comment? Leave it below 👇
+
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo)

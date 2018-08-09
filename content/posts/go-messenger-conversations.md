@@ -3,7 +3,7 @@ title: "Building a Messenger App: Conversations"
 description: "Building a messenger app: conversations"
 tags: ["golang", "sql"]
 date: 2018-07-08T18:09:07-04:00
-lastmod: 2018-07-13T19:06:59-04:00
+lastmod: 2018-08-09T17:15:07-04:00
 tweet_id: 1016108778092154880
 draft: false
 ---
@@ -329,3 +329,5 @@ Yeah, that concludes with the conversation endpoints.
 Got any questions, advice or comment? Leave it below 😉
 
 Wait for the next post to create and list messages 👋
+
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo)
