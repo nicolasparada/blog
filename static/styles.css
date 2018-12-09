@@ -1,7 +1,7 @@
 :root {
     --color: white;
-    --accent-color: hsl(180, 100%, 80%);
-    --inline-code-color: hsl(330, 100%, 80%);
+    --accent-color: hsl(228, 100%, 81%);
+    --inline-code-color: hsl(12, 100%, 82%);
     --muted-color: hsl(0, 0%, 59%);
     --bgcolor: hsl(0, 0%, 3%);
     --second-bgcolor: hsl(0, 0%, 12%);
@@ -10,7 +10,7 @@
     --root-bgcolor: black;
     --sans-serif-font-family: 'PT Sans', sans-serif;
     --monospace-font-family: 'Roboto Mono', monospace;
-/*  */
+
     background-color: var(--root-bgcolor);
     box-sizing: border-box;
     color: var(--color);
