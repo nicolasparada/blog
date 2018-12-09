@@ -1,5 +1,3 @@
 baseURL = "https://nicolasparada.netlify.com/"
 languageCode = "en-us"
 title = "Nicolás Parada"
-pygmentsCodefences = true
-pygmentsUseClasses = true
