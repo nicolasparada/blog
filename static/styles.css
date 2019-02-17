@@ -9,7 +9,7 @@
     --active-bgcolor: hsl(0, 0%, 40%);
     --root-bgcolor: black;
     --sans-serif-font-family: 'PT Sans', sans-serif;
-    --monospace-font-family: 'Roboto Mono', monospace;
+    --monospace-font-family: 'Overpass Mono', monospace;
 
     background-color: var(--root-bgcolor);
     box-sizing: border-box;
