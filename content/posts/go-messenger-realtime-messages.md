@@ -113,7 +113,7 @@ func subscribeToMessages(w http.ResponseWriter, r *http.Request) {
 			return
 		case message := <-messages:
 			if b, err := json.Marshal(message); err != nil {
-        log.Printf("could not marshall message: %v\n", err)
+				log.Printf("could not marshall message: %v\n", err)
 				fmt.Fprintf(w, "event: error\ndata: %v\n\n", err)
 			} else {
 				fmt.Fprintf(w, "data: %s\n\n", b)
