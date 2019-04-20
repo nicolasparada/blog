@@ -3,8 +3,7 @@ title: "Building a Messenger App: OAuth"
 description: "Building a messenger app: OAuth"
 tags: ["golang", "sql"]
 date: 2018-07-06T10:56:12-04:00
-lastmod: 2018-08-09T17:15:07-04:00
-tweet_id: 1015277042621931526
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -223,7 +222,7 @@ OAuth2 uses a mechanism to prevent CSRF attacks so it requires a "state". We use
 ## OAuth Callback
 
 Once the user grant access to his info on the GitHub page, he will be redirected to this endpoint.
-The URL will come with the state and a code on the query string `/api/oauth/github/callback?state=our_state&code=some_code`
+The URL will come with the state and a code on the query string `/api/oauth/github/callback?state=&code=`
 
 ```go
 const jwtLifetime = time.Hour * 24 * 14
@@ -347,7 +346,7 @@ Then we try to find a user with that GitHub ID on the database. If none is found
 
 Then, with the newly created user, we issue a JSON web token with the user ID as Subject and redirect to the frontend with the token, along side the expiration date in the query string.
 
-The web app will be for another post, but the URL you are being redirected is `/callback?token=token_here&expires_at=some_date`. There we'll have some JavaScript to extract the token and expiration date from the URL and do a GET request to `/api/auth_user` with the token in the `Authorization` header in the form of `Bearer token_here` to get the authenticated user and save it to localStorage.
+The web app will be for another post, but the URL you are being redirected is `/callback?token=&expires_at=`. There we'll have some JavaScript to extract the token and expiration date from the URL and do a GET request to `/api/auth_user` with the token in the `Authorization` header in the form of `Bearer token_here` to get the authenticated user and save it to localStorage.
 
 ## Guard Middleware
 
@@ -424,8 +423,7 @@ We use the guard middleware to get the current authenticated user id and do a qu
 
 ---
 
-That will cover the OAuth process on the backend. Have any question, advice or comment? Leave it below 😉
-
+That will cover the OAuth process on the backend.
 In the next part we'll see how to start conversations with other users.
 
 [Souce Code](https://github.com/nicolasparada/go-messenger-demo)

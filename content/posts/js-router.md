@@ -3,8 +3,7 @@ title: "JavaScript Router"
 description: "Coding a router for building single page applications with JavaScript"
 tags: ["javascript"]
 date: 2018-04-25T22:21:12-03:00
-lastmod: 2018-06-23T18:55:20-04:00
-tweet_id: 989317009900036097
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -213,5 +212,4 @@ That will cover the basic features. I wanted to share this because I'll use this
 
 I've published it as an [npm package](https://www.npmjs.com/package/@nicolasparada/router).
 
- - [Source code](https://github.com/nicolasparada/js-router).
- - [Demo](https://js-router.netlify.com/).
+ [Source code](https://github.com/nicolasparada/js-router) • [Demo](https://js-router.netlify.com/).

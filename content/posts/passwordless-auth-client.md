@@ -3,8 +3,7 @@ title: "Passwordless Auth: Client"
 description: "Coding a client in JavaScript for a passwordless auth HTTP API"
 tags: ["javascript"]
 date: 2018-04-29T22:18:24-03:00
-lastmod: 2018-06-23T16:48:09-04:00
-tweet_id: 990763235065450496
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -351,6 +350,6 @@ This page greets the authenticated user and also has a logout button. The `logou
 ---
 
 There is it. I bet you already saw the [demo](https://go-passwordless-demo.herokuapp.com/) before.
-Also, the source code is in the same [repository](https://github.com/nicolasparada/go-passwordless-demo).
+Also, the [source code here](https://github.com/nicolasparada/go-passwordless-demo).
 
 👋👋👋

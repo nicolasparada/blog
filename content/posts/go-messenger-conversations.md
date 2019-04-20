@@ -3,8 +3,7 @@ title: "Building a Messenger App: Conversations"
 description: "Building a messenger app: conversations"
 tags: ["golang", "sql"]
 date: 2018-07-08T18:09:07-04:00
-lastmod: 2018-08-09T17:15:07-04:00
-tweet_id: 1016108778092154880
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -25,7 +24,7 @@ Inside the `main()` function add this routes.
 ```go
 router.HandleFunc("POST", "/api/conversations", requireJSON(guard(createConversation)))
 router.HandleFunc("GET", "/api/conversations", guard(getConversations))
-router.HandleFunc("GET", "/api/conversations/:conversation_id", guard(getConversation))
+router.HandleFunc("GET", "/api/conversations/:conversationID", guard(getConversation))
 ```
 
 These three endpoints require authentication so we use the `guard()` middleware. There is a new middleware that checks for the request content type JSON.
@@ -64,7 +63,7 @@ type Message struct {
 	ID             string    `json:"id"`
 	Content        string    `json:"content"`
 	UserID         string    `json:"-"`
-	ConversationID string    `json:"conversationId,omitempty"`
+	ConversationID string    `json:"conversationID,omitempty"`
 	CreatedAt      time.Time `json:"createdAt"`
 	Mine           bool      `json:"mine"`
 	ReceiverID     string    `json:"-"`
@@ -190,7 +189,7 @@ This is the `Errors` struct. It's just a map. If you enter an empty username you
 Then, we begin an SQL transaction.
 We only received an username, but we need the actual user ID. So the first part of the transaction is to query for the id and avatar of that user (the other participant). If the user is not found, we respond with a `404 Not Found` error. Also, if the user happens to be the same as the current authenticated user, we respond with `403 Forbidden`. There should be two different users, not the same.
 
-Then, we try to find a conversation those two users have in common. We use `INTERSECT` for that. If there is one, we redirect to that conversation `/api/conversations/conversation_id_here` and return there.
+Then, we try to find a conversation those two users have in common. We use `INTERSECT` for that. If there is one, we redirect to that conversation `/api/conversations/{conversationID}` and return there.
 
 If no common conversation was found, we continue by creating a new one and adding the two participants. Finally, we `COMMIT` the transaction and respond with the newly created conversation.
 
@@ -273,13 +272,13 @@ Then it iterates over the rows, scan each one to make an slice of conversations 
 
 ## Get Conversation
 
-This endpoint `/api/conversations/conversation_id_here` respond with a single conversation by its ID.
+This endpoint `/api/conversations/{conversationID}` respond with a single conversation by its ID.
 
 ```go
 func getConversation(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	authUserID := ctx.Value(keyAuthUserID).(string)
-	conversationID := way.Param(ctx, "conversation_id")
+	conversationID := way.Param(ctx, "conversationID")
 
 	var conversation Conversation
 	var otherParticipant User
@@ -326,7 +325,6 @@ If the query returns no rows, we respond with a `404 Not Found` error, otherwise
 ---
 
 Yeah, that concludes with the conversation endpoints.
-Got any questions, advice or comment? Leave it below 😉
 
 Wait for the next post to create and list messages 👋
 

@@ -4,7 +4,6 @@ description: "Building a messenger app: conversation page"
 tags: ["javascript"]
 date: 2018-07-20T12:15:43-04:00
 lastmod: 2018-08-09T17:15:07-04:00
-tweet_id: 1020345424522235910
 draft: false
 ---
 
@@ -32,10 +31,10 @@ import http from '../http.js'
 import { navigate } from '../router.js'
 import { avatar, escapeHTML } from '../shared.js'
 
-export default async function conversationPage(conversationId) {
+export default async function conversationPage(conversationID) {
     let conversation
     try {
-        conversation = await getConversation(conversationId)
+        conversation = await getConversation(conversationID)
     } catch (err) {
         alert(err.message)
         navigate('/', true)
@@ -63,7 +62,7 @@ function getConversation(id) {
 
 This page receives the conversation ID the router extracted from the URL.
 
-First it does a GET request to `/api/conversations/conversation_id_here` to get info about the conversation. In case of error, we show it and redirect back to `/`. Then we render info about the other participant.
+First it does a GET request to `/api/conversations/{conversationID}` to get info about the conversation. In case of error, we show it and redirect back to `/`. Then we render info about the other participant.
 
 ## Conversation List
 
@@ -75,8 +74,8 @@ We'll fetch the latest messages too to display them.
 let conversation, messages
 try {
     [conversation, messages] = await Promise.all([
-        getConversation(conversationId),
-        getMessages(conversationId),
+        getConversation(conversationID),
+        getMessages(conversationID),
     ])
 }
 ```
@@ -84,12 +83,12 @@ try {
 Update the `conversationPage()` function to fetch the messages too. We use `Promise.all()` to do both request at the same time.
 
 ```js
-function getMessages(conversationId) {
-    return http.get(`/api/conversations/${conversationId}/messages`)
+function getMessages(conversationID) {
+    return http.get(`/api/conversations/${conversationID}/messages`)
 }
 ```
 
-A GET request to `/api/conversations/conversation_id_here/messages` gets the latest messages of the conversation.
+A GET request to `/api/conversations/{conversationID}/messages` gets the latest messages of the conversation.
 
 ```html
 <ol id="messages"></ol>
@@ -139,13 +138,13 @@ Each message item displays the message content itself with its timestamp. Using 
 Add that form to the current markup.
 
 ```js
-page.getElementById('message-form').onsubmit = messageSubmitter(conversationId)
+page.getElementById('message-form').onsubmit = messageSubmitter(conversationID)
 ```
 
 Attach an event listener to the "submit" event.
 
 ```js
-function messageSubmitter(conversationId) {
+function messageSubmitter(conversationID) {
     return async ev => {
         ev.preventDefault()
 
@@ -157,7 +156,7 @@ function messageSubmitter(conversationId) {
         submitButton.disabled = true
 
         try {
-            const message = await createMessage(input.value, conversationId)
+            const message = await createMessage(input.value, conversationID)
             input.value = ''
             const messagesOList = document.getElementById('messages')
             if (messagesOList === null) {
@@ -182,19 +181,19 @@ function messageSubmitter(conversationId) {
     }
 }
 
-function createMessage(content, conversationId) {
-    return http.post(`/api/conversations/${conversationId}/messages`, { content })
+function createMessage(content, conversationID) {
+    return http.post(`/api/conversations/${conversationID}/messages`, { content })
 }
 ```
 
-We make use of [partial application](https://en.wikipedia.org/wiki/Partial_application) to have the conversation ID in the "submit" event handler. It takes the message content from the input and does a POST request to `/api/conversations/conversation_id_here/messages` with it. Then prepends the newly created message to the list.
+We make use of [partial application](https://en.wikipedia.org/wiki/Partial_application) to have the conversation ID in the "submit" event handler. It takes the message content from the input and does a POST request to `/api/conversations/{conversationID}/messages` with it. Then prepends the newly created message to the list.
 
 ## Messages Subscription
 
 To make it realtime we'll subscribe to the message stream in this page also.
 
 ```js
-page.addEventListener('disconnect', subscribeToMessages(messageArriver(conversationId)))
+page.addEventListener('disconnect', subscribeToMessages(messageArriver(conversationID)))
 ```
 
 Add that line in the `conversationPage()` function.
@@ -204,9 +203,9 @@ function subscribeToMessages(cb) {
     return http.subscribe('/api/messages', cb)
 }
 
-function messageArriver(conversationId) {
+function messageArriver(conversationID) {
     return message => {
-        if (message.conversationId !== conversationId) {
+        if (message.conversationID !== conversationID) {
             return
         }
 
@@ -216,18 +215,18 @@ function messageArriver(conversationId) {
 
         }
         messagesOList.appendChild(renderMessage(message))
-        readMessages(message.conversationId)
+        readMessages(message.conversationID)
     }
 }
 
-function readMessages(conversationId) {
-    return http.post(`/api/conversations/${conversationId}/read_messages`)
+function readMessages(conversationID) {
+    return http.post(`/api/conversations/${conversationID}/read_messages`)
 }
 ```
 
 We also make use of partial application to have the conversation ID here.
 <br>
-When a new message arrives, first we check if it's from this conversation. If it is, we go a prepend a message item to the list and do a POST request to `/api/conversations/conversation_id_here/read_messages` to updated the last time the participant read messages.
+When a new message arrives, first we check if it's from this conversation. If it is, we go a prepend a message item to the list and do a POST request to `/api/conversations/{conversationID}/read_messages` to updated the last time the participant read messages.
 
 ---
 
@@ -235,6 +234,4 @@ That concludes this series. The messenger app is now functional.
 
 ~~I'll add pagination on the conversation and message list, also user searching before sharing the source code. I'll updated once it's ready along with a hosted demo 👨‍💻~~
 
-[Souce Code](https://github.com/nicolasparada/go-messenger-demo)
-<br>
-[Demo](https://go-messenger-demo.herokuapp.com/)
+[Souce Code](https://github.com/nicolasparada/go-messenger-demo) • [Demo](https://go-messenger-demo.herokuapp.com/)

@@ -3,8 +3,7 @@ title: "Building a Messenger App: Realtime Messages"
 description: "Building a messenger app: realtime messages"
 tags: ["golang", "sql"]
 date: 2018-07-10T17:24:52-04:00
-lastmod: 2019-03-22T15:54:37-03:00
-tweet_id: 1016809612065034240
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -147,7 +146,5 @@ Note aside, the JavaScript API to work with Server-Sent Events (EventSource) doe
 
 That concludes the realtime messages.
 I'd like to say that's everything in the backend, but to code the frontend I'll add one more endpoint to login. A login that will be just for development.
-
-Got any question, advice or comment? Leave it below 👇
 
 [Souce Code](https://github.com/nicolasparada/go-messenger-demo)

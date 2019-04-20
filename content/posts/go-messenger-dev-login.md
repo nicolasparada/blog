@@ -3,8 +3,7 @@ title: "Building a Messenger App: Development Login"
 description: "Building a messenger app: development login"
 tags: ["golang", "sql"]
 date: 2018-07-12T20:40:42-04:00
-lastmod: 2018-08-09T17:15:07-04:00
-tweet_id: 1017581295419973632
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -114,8 +113,8 @@ cat seed_users.sql | cockroach sql --insecure -d messenger
 ```
 ---
 
-That's it. Once you deploy the code to production and use your own domain (origin) this login function won't be available.
+That's it. Once you deploy the code to production and use your own domain this login function won't be available.
 
-This post concludes the backend. Got any question, advice or comment? Just leave it below 👍
+This post concludes the backend.
 
 [Souce Code](https://github.com/nicolasparada/go-messenger-demo)

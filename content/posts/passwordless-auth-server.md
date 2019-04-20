@@ -3,8 +3,7 @@ title: "Passwordless Auth: Server"
 description: "Coding a passwordless auth HTTP service in Go"
 tags: ["golang", "sql"]
 date: 2018-04-18T10:36:23-03:00
-lastmod: 2018-06-23T16:04:14-04:00
-tweet_id: 986602458716803074
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -420,7 +419,7 @@ This SQL query will insert a new verification code associated with a user with t
     // ...
 ```
 
-Now, I build the magic link, and set the `verification_code` and `redirect_uri` in the query string. Ex: `http://localhost/api/passwordless/verify_redirect?verification_code=some_code&redirect_uri=https://frontend.app/callback`.
+Now, I build the magic link, and set the `verification_code` and `redirect_uri` in the query string. Ex: `http://localhost/api/passwordless/verify_redirect?verification_code=foo&redirect_uri=https://frontend.app/callback`.
 
 ```go
     // ...
@@ -726,8 +725,6 @@ If you didn't close the previous cockroach node and you set `SMTP_USERNAME` and 
 That's all for today. If you have problems about `Blocked script execution because the document's frame is sandboxed and the 'allow-scripts' permission is not set` after clicking the magic link on mailtrap, try doing a right click + "Open link in new tab". This is a security thing where the mail content is [sandboxed](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox).
 I had this problem sometimes on `localhost`, but I think you should be fine once you deploy the server with `https://` and use a normal SMTP service.
 
-[Source Code](https://github.com/nicolasparada/go-passwordless-demo).
-
-[Demo](https://go-passwordless-demo.herokuapp.com/).
+[Source Code](https://github.com/nicolasparada/go-passwordless-demo). • [Demo](https://go-passwordless-demo.herokuapp.com/).
 
 I~~'ll write~~ wrote a [second part]((/posts/passwordless-auth-client/)) for this post coding a JavaScript client for the API.

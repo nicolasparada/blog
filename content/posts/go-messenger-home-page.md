@@ -3,8 +3,7 @@ title: "Building a Messenger App: Home Page"
 description: "Building a messenger app: home page"
 tags: ["javascript"]
 date: 2018-07-19T10:32:06-04:00
-lastmod: 2018-08-09T17:15:07-04:00
-tweet_id: 1019955422495637509
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -188,7 +187,7 @@ The `subscribe()` function returns a function that once called it closes the und
 
 ```js
 async function onMessageArrive(message) {
-    const conversationLI = document.querySelector(`li[data-id="${message.conversationId}"]`)
+    const conversationLI = document.querySelector(`li[data-id="${message.conversationID}"]`)
     if (conversationLI !== null) {
         conversationLI.classList.add('has-unread-messages')
         conversationLI.querySelector('a > div > p').textContent = message.content
@@ -198,7 +197,7 @@ async function onMessageArrive(message) {
 
     let conversation
     try {
-        conversation = await getConversation(message.conversationId)
+        conversation = await getConversation(message.conversationID)
         conversation.lastMessage = message
     } catch (err) {
         console.error(err)
@@ -218,14 +217,12 @@ function getConversation(id) {
 }
 ```
 
-Every time a new message arrives, we go and query for the conversation item in the DOM. If found, we add the `has-unread-messages` class to the item, and update the view. If not found, it means the message is from a new conversation created just now. We go and do a GET request to `/api/conversations/conversation_id_here` to get the conversation in which the message was created and prepend it to the conversation list.
+Every time a new message arrives, we go and query for the conversation item in the DOM. If found, we add the `has-unread-messages` class to the item, and update the view. If not found, it means the message is from a new conversation created just now. We go and do a GET request to `/api/conversations/{conversationID}` to get the conversation in which the message was created and prepend it to the conversation list.
 
 ---
 
 That covers the home page 😊
 <br>
 On the next post we'll code the conversation page.
-
-Got any question, advice or comment? Leave it below 👇
 
 [Souce Code](https://github.com/nicolasparada/go-messenger-demo)

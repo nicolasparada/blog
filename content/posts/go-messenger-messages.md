@@ -3,8 +3,7 @@ title: "Building a Messenger App: Messages"
 description: "Building a messenger app: messages"
 tags: ["golang", "sql"]
 date: 2018-07-10T14:39:48-04:00
-lastmod: 2018-08-09T17:15:07-04:00
-tweet_id: 1016756521244479490
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -18,16 +17,16 @@ In this post we'll code the endpoints to create a message and list them, also an
 Start by adding these routes in the `main()` function.
 
 ```go
-router.HandleFunc("POST", "/api/conversations/:conversation_id/messages", requireJSON(guard(createMessage)))
-router.HandleFunc("GET", "/api/conversations/:conversation_id/messages", guard(getMessages))
-router.HandleFunc("POST", "/api/conversations/:conversation_id/read_messages", guard(readMessages))
+router.HandleFunc("POST", "/api/conversations/:conversationID/messages", requireJSON(guard(createMessage)))
+router.HandleFunc("GET", "/api/conversations/:conversationID/messages", guard(getMessages))
+router.HandleFunc("POST", "/api/conversations/:conversationID/read_messages", guard(readMessages))
 ```
 
 Messages goes into conversations so the endpoint includes the conversation ID.
 
 ## Create Message
 
-This endpoint handles POST requests to `/api/conversations/conversation_id_here/messages` with a JSON body with just the message content and return the newly created message. It has two side affects: it updates the conversation `last_message_id` and updates the participant `messages_read_at`.
+This endpoint handles POST requests to `/api/conversations/{conversationID}/messages` with a JSON body with just the message content and return the newly created message. It has two side affects: it updates the conversation `last_message_id` and updates the participant `messages_read_at`.
 
 ```go
 func createMessage(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +53,7 @@ func createMessage(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	authUserID := ctx.Value(keyAuthUserID).(string)
-	conversationID := way.Param(ctx, "conversation_id")
+	conversationID := way.Param(ctx, "conversationID")
 
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
@@ -186,13 +185,13 @@ Before responding with the new message, we must notify about it. This is for the
 
 ## Get Messages
 
-This endpoint handles GET requests to `/api/conversations/conversation_id_here/messages`. It responds with a JSON array with all the messages in the conversation. It also has the same side affect of updating the participant `messages_read_at`.
+This endpoint handles GET requests to `/api/conversations/{conversationID}/messages`. It responds with a JSON array with all the messages in the conversation. It also has the same side affect of updating the participant `messages_read_at`.
 
 ```go
 func getMessages(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	authUserID := ctx.Value(keyAuthUserID).(string)
-	conversationID := way.Param(ctx, "conversation_id")
+	conversationID := way.Param(ctx, "conversationID")
 
 	tx, err := db.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
@@ -268,13 +267,13 @@ First, it begins an SQL transaction in readonly mode. Checks for the participant
 
 ## Read Messages
 
-This endpoint handles POST requests to `/api/conversations/conversation_id_here/read_messages`. Without any request or response body. In the frontend we'll make this request each time a new message arrive in the realtime stream.
+This endpoint handles POST requests to `/api/conversations/{conversationID}/read_messages`. Without any request or response body. In the frontend we'll make this request each time a new message arrive in the realtime stream.
 
 ```go
 func readMessages(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	authUserID := ctx.Value(keyAuthUserID).(string)
-	conversationID := way.Param(ctx, "conversation_id")
+	conversationID := way.Param(ctx, "conversationID")
 
 	if err := updateMessagesReadAt(ctx, authUserID, conversationID); err != nil {
 		respondError(w, fmt.Errorf("could not update messages read at: %v", err))
@@ -290,7 +289,5 @@ It uses the same function we've been using to update the participant `messages_r
 ---
 
 That concludes it. Realtime messages is the only part left in the backend. Wait for it in the next post.
-
-Got any question, advice or comment? Leave it below 👍
 
 [Souce Code](https://github.com/nicolasparada/go-messenger-demo)

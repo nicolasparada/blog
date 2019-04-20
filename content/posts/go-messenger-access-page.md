@@ -3,8 +3,7 @@ title: "Building a Messenger App: Access Page"
 description: "Building a messenger app: access page"
 tags: ["javascript"]
 date: 2018-07-16T08:54:36-04:00
-lastmod: 2018-08-09T17:15:07-04:00
-tweet_id: 1018842920286375936
+lastmod: 2019-04-19T22:35:17-04:00
 draft: false
 ---
 
@@ -98,7 +97,7 @@ function view(pageName) {
 
 If you are follower of this blog, you already know how this works. That router is the one showed [here](/posts/js-router/). Just download it from [@nicolasparada/router](https://unpkg.com/@nicolasparada/router) and save it to `static/router.js`.
 
-We registered four routes. At the root `/` we show the home or access page whether the user is authenticated. At `/callback` we show the callback page. On `/conversations/conversation_id_here` we show the conversation or access page whether the user is authenticated and for every other URL, we show a not found page.
+We registered four routes. At the root `/` we show the home or access page whether the user is authenticated. At `/callback` we show the callback page. On `/conversations/{conversationID}` we show the conversation or access page whether the user is authenticated and for every other URL, we show a not found page.
 
 We tell the router to render the result to the document body and dispatch a `disconnect` event to each page before leaving.
 
@@ -426,7 +425,5 @@ Remember to remove this form once you are done with the frontend.
 ---
 
 That's all for this post. In the next one, we'll continue with the home page to add a form to start conversations and display a list with the latest ones.
-
-Got any question, advice or comment? Leave it below 👍
 
 [Souce Code](https://github.com/nicolasparada/go-messenger-demo)
