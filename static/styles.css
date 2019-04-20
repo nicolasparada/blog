@@ -1,15 +1,15 @@
 :root {
     --color: white;
-    --accent-color: hsl(228, 100%, 81%);
-    --inline-code-color: hsl(12, 100%, 82%);
-    --muted-color: hsl(0, 0%, 59%);
-    --bgcolor: hsl(0, 0%, 3%);
+    --accent-color: hsl(217, 87%, 70%);
+    --inline-code-color: white;
+    --muted-color: hsl(0, 0%, 61%);
+    --bgcolor: black;
     --second-bgcolor: hsl(0, 0%, 12%);
     --hover-bgcolor: hsl(0, 0%, 20%);
     --active-bgcolor: hsl(0, 0%, 40%);
-    --root-bgcolor: black;
+    --root-bgcolor: hsl(0, 0%, 4%);
     --sans-serif-font-family: 'PT Sans', sans-serif;
-    --monospace-font-family: 'Overpass Mono', monospace;
+    --monospace-font-family: 'Fira Mono', monospace;
 
     background-color: var(--root-bgcolor);
     box-sizing: border-box;
@@ -34,7 +34,8 @@ body {
 .container {
     margin: 0 auto;
     max-width: 65ch;
-    width: calc(100% - 2rem);
+    padding: 0 1rem;
+    /* width: calc(100% - 2rem); */
 }
 
 h1 {
@@ -63,6 +64,15 @@ time,
 
 hr {
     margin: 3rem 0;
+    border-color: var(--muted-color);
+}
+
+pre {
+    background-color: var(--bgcolor);
+    width: 100vw;
+    position: relative;
+    margin-left: -50vw;
+    left: 50%;
 }
 
 code {
@@ -77,9 +87,12 @@ code {
 pre code {
     display: block;
     color: inherit;
-    padding: 1rem;
     overflow-x: auto;
-    border-radius: .5rem;
+    background: none;
+    max-width: 65ch;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1rem;
 }
 
 pre code::-webkit-scrollbar {
