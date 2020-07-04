@@ -1,3 +1,6 @@
 baseURL = "https://nicolasparada.netlify.com/"
 languageCode = "en-us"
 title = "Nicolás Parada"
+[markup]
+    [markup.highlight]
+        codeFences = false
