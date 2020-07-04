@@ -16,7 +16,7 @@
     color: var(--color);
     font-size: 19px;
     font-family: var(--sans-serif-font-family);
-    line-height: 1.6;
+    line-height: 1.7;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
@@ -87,6 +87,7 @@ pre code {
     display: block;
     color: inherit;
     overflow-x: auto;
+    line-height: 2;
     background: none;
     max-width: 65ch;
     width: 100%;
