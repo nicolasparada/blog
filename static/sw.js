@@ -1,4 +1,4 @@
-const VERSION = 23
+const VERSION = 24
 const staticCacheName = `static-v${VERSION}`
 const staticUrlsToCache = [
     '/external-links.js',
