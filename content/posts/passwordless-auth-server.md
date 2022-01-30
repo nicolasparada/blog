@@ -727,4 +727,5 @@ I had this problem sometimes on `localhost`, but I think you should be fine once
 
 [Source Code](https://github.com/nicolasparada/go-passwordless-demo). • [Demo](https://go-passwordless-demo.herokuapp.com/).
 
-I~~'ll write~~ wrote a [second part]((/posts/passwordless-auth-client/)) for this post coding a JavaScript client for the API.
+I wrote a [second part](/posts/passwordless-auth-client/) for this post coding a JavaScript client for the API.
+~
